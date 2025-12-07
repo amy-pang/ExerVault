@@ -1,0 +1,39 @@
+.custom-button {
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 12px 20px;
+ background-color: #B6E0FF;
+color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-weight: 600;
+}
+
+.custom-button:hover {
+  background-color: #B6E0FF;
+}
+
+.custom-button:active {
+  transform: scale(0.97);
+}
+
+.custom-button.disabled,
+.custom-button:disabled {
+  background-color: #bfc7e0;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.custom-label{
+    display:flex;
+    font-size: 96 ;
+    font-weight:600;
+    color:#FFFFFF;
+    text-align: center;
+    letter-spacing: 0.3px;
+
+}
