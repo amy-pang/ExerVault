@@ -1,11 +1,12 @@
 import React from "react";
-import type { Exercise } from "./types/exercise";
 
-type DummyTableProps = {
-  data: Exercise[];
+type Exercise = {
+  id: number;
+  name: string;
+  type: string; // matches your DummyExercises shape
 };
 
-const DummyTable = ({ data }: DummyTableProps) => {
+const DummyTable: React.FC<{ data: Exercise[] }> = ({ data }) => {
   return (
     <table>
       <thead>
@@ -19,7 +20,7 @@ const DummyTable = ({ data }: DummyTableProps) => {
         {data.map((item) => (
           <tr key={item.id}>
             <td>{item.name}</td>
-            <td>{item.category}</td>
+            <td>{item.type}</td>
           </tr>
         ))}
       </tbody>
