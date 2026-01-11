@@ -2,6 +2,13 @@ import { useState } from 'react'
 import './App.css'
 import Header from '../components/Header';
 import { DummyExercises } from '../dummy_exercises';
+import DummyTable from '../DummyTable';
+
+type Exercise = {
+  id: number;
+  name: string;
+  type: string;
+};
 
 function App() {
   const [query, setQuery] = useState("");
@@ -10,6 +17,12 @@ function App() {
     // You will replace this with filtering your Supabase/list data
   };*/
 
+  const search = (data: Exercise[]): Exercise[] => {
+    return data.filter((item) =>
+      item.name.toLowerCase().includes(query.toLowerCase())
+    );
+  };
+
   return (
     <>
       <div className="header-wrapper">
@@ -17,15 +30,7 @@ function App() {
       </div>
 
       {/* shows catalog of exercises */}
-      <ul className="list" color="black">
-        {DummyExercises.filter(exercise=>exercise.name.toLowerCase().includes(query)
-        ).map((exercise) => (
-          <li key={exercise.id} className="listItem" color="black">
-            {exercise.name}
-          </li>
-        ))}
-        
-      </ul>
+      <DummyTable data={search(DummyExercises)}/>
     </>
   )
 }
