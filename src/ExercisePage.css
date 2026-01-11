@@ -1,6 +1,16 @@
 .page {
   padding: 20px;
   font-family: Arial, sans-serif;
+  box-sizing: border-box;
+  /* Make this section full-bleed across the viewport */
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+  /* Fill viewport height so the page visually fills the screen */
+  min-height: 100vh;
 }
 
 /* --- TOP BAR --- */
@@ -26,8 +36,8 @@
 .searchBar {
   width: 100%;
   padding: 12px 18px;
-  background: #d9ecff;
-  border: none;
+  background: white;
+  border: 1px solid #d1d7de;
   border-radius: 20px;
   font-size: 14px;
 }
@@ -117,6 +127,18 @@
   padding-left: 6px;
 }
 
+/* Make input-like elements have a white background and good focus outline */
+input, textarea, select, .inputBox {
+  background: white;
+  color: #111;
+  box-sizing: border-box;
+}
+
+input:focus, textarea:focus, select:focus, .inputBox:focus {
+  outline: 3px solid rgba(99,102,241,0.12);
+  outline-offset: 2px;
+}
+
 .inputDesc {
   font-size: 14px;
   max-width: 160px;
@@ -134,6 +156,7 @@
 .comments {
   width: 100%;
   border: 1px solid #aaa;
+  background: white;
   border-radius: 8px;
   padding: 12px;
   font-size: 16px;
