@@ -1,38 +1,40 @@
 import { useState } from 'react'
 import { AiOutlineHome, AiOutlineSearch, AiOutlineShoppingCart } from "react-icons/ai";
 import './Header.css'
+import { DummyExercises } from '../dummy_exercises';
 
 type HeaderProps = {
-  onSearch: (query: string) => void;
+  query: string;
+  onQueryChange: (value: string) => void;
 };
 
-function Header({ onSearch }: HeaderProps) {
-  const [query, setQuery] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
+function Header({ query, onQueryChange }: HeaderProps) {
+  /*const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSearch(query.trim());
-  };
+  };*/
 
+  console.log(DummyExercises.filter(exercise=>exercise.name.toLowerCase().includes("u")));
   return (
     <div className="header-wrapper">
         <header className="header-container">
 
-            <AiOutlineHome className="header-icon" />
+            <AiOutlineHome className="header-icon" color="black"/>
 
-            <form className="search-bar" onSubmit={handleSubmit}>
-            <input
-                className="search-input"
-                placeholder="Search..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-            />
-            <button className="search-icon" type="submit">
-                <AiOutlineSearch size={20} />
-            </button>
-            </form>
+            <div className="search-bar">
+              <input
+                  className="search-input"
+                  type="text"
+                  placeholder="Search..."
+                  value={query}
+                  onChange={(e) => onQueryChange(e.target.value)}
+              />
+              <button className="search-icon" type="submit">
+                  <AiOutlineSearch size={20} />
+              </button>
+            </div>
 
-            <AiOutlineShoppingCart className="header-icon" />
+            <AiOutlineShoppingCart className="header-icon" color="black"/>
         </header>
     </div>
   );
