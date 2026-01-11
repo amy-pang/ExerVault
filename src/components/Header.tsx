@@ -39,3 +39,5 @@ function Header({ query, onQueryChange }: HeaderProps) {
     </div>
   );
 }
+
+export default Header;
