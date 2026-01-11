@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { supabase } from './supabaseClient';
 import "./ExercisePage.css";
 
 export default function ExercisePage() {
+  const id = "0787f5c0-0db9-4f7d-860e-7870597c7c84"; // Replace with your actual exercise ID
+  const [exercise, setExercise] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageDimensions, setImageDimensions] = useState({ width: 260, height: 260 });
+  
   const [frequency, setFrequency] = useState("");
   const [sets, setSets] = useState("");
   const [reps, setReps] = useState("");
@@ -9,13 +16,53 @@ export default function ExercisePage() {
   const [description, setDescription] = useState("");
   const [comments, setComments] = useState("");
 
+  // Fetch exercise from database
+  useEffect(() => {
+    async function fetchExercise() {
+      if (!id) return;
+      console.log(import.meta.env.VITE_SUPABASE_URL);
+      // First, let's see all exercises in the table
+      const { data: allExercises } = await supabase
+        .from('exercises')
+        .select('*');
+      console.log('All exercises:', allExercises);
+      
+      const { data, error } = await supabase
+        .from('exercises')
+        .select('*')
+        .eq('id', id)
+        .single();
+      
+      if (error) {
+        console.error('Error fetching exercise:', error);
+        console.log('Looking for ID:', id);
+        setLoading(false);
+        return;
+      }
+      
+      setExercise(data);
+      setDescription(data.description || "");
+      
+      // Get image URL from storage
+      if (data.image_path) {
+        const { data: urlData } = supabase.storage
+          .from('exercise-images')
+          .getPublicUrl(data.image_path);
+        setImageUrl(urlData.publicUrl);
+      }
+      
+      setLoading(false);
+    }
+    
+    fetchExercise();
+  }, [id]);
+
   // Load saved values on mount
   useEffect(() => {
     setFrequency(localStorage.getItem("frequency") || "");
     setSets(localStorage.getItem("sets") || "");
     setReps(localStorage.getItem("reps") || "");
     setRepType(localStorage.getItem("repType") || "reps");
-    setDescription(localStorage.getItem("description") || "");
     setComments(localStorage.getItem("comments") || "");
   }, []);
 
@@ -29,29 +76,39 @@ export default function ExercisePage() {
 
   return (
     <div className="page">
-
-      <header className="topBar">
-        <div className="icon">🏠</div>
-
-        <div className="searchWrapper">
-          <input className="searchBar" type="text" placeholder="Search by exercise name" />
-          <div className="searchIcon">🔍</div>
-        </div>
-
-        <div className="icon">🛒</div>
-      </header>
-
+      
       <h1 className="exerciseTitle">
-        Exercise Name <span className="category">Category</span>
+        {loading ? "Loading..." : exercise?.name || "Exercise Name"} 
+        <span className="category">{exercise?.category || "Category"}</span>
       </h1>
 
       <div className="content">
 
         <div className="leftSection">
 
-          <div className="imagePlaceholder">
-            <div className="circle"></div>
-            <div className="triangle"></div>
+          <div className="imagePlaceholder" style={{ width: imageDimensions.width, height: imageDimensions.height }}>
+            {imageUrl && (
+              <img 
+                src={imageUrl} 
+                alt={exercise?.name}
+                onLoad={(e) => {
+                  const img = e.currentTarget;
+                  const maxSize = 260;
+                  const ratio = img.naturalWidth / img.naturalHeight;
+                  let width = maxSize;
+                  let height = maxSize;
+                  
+                  if (ratio > 1) {
+                    height = maxSize / ratio;
+                  } else {
+                    width = maxSize * ratio;
+                  }
+                  
+                  setImageDimensions({ width, height });
+                }}
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+              />
+            )}
           </div>
 
           <div className="inputRow">
@@ -78,7 +135,7 @@ export default function ExercisePage() {
 
           {/* UPDATED REPS ROW WITH DROPDOWN */}
           <div className="inputRow">
-            <label className="label">Reps</label>
+            <label className="label">{repType === "reps" ? "Reps" : "Seconds"}</label>
 
             <input
               type="number"
