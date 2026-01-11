@@ -95,10 +95,6 @@ export default function ExercisePage() {
               <option value="reps">Reps</option>
               <option value="seconds">Seconds</option>
             </select>
-
-            <span className="inputDesc">
-              {repType === "reps" ? "# of reps" : "Seconds"}
-            </span>
           </div>
 
         </div>
