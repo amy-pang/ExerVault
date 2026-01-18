@@ -11,6 +11,7 @@ function App() {
   const [query, setQuery] = useState("");
 
   return (
+<<<<<<< HEAD
     <BrowserRouter>
       <Header
         query={query}
@@ -24,6 +25,15 @@ function App() {
       </Routes>
     </BrowserRouter>
   );
+=======
+    <>
+      <div className="header-wrapper">
+        <Header onSearch={handleSearch} />
+      </div>
+      <HomePage />
+    </>
+  )
+>>>>>>> 0709255 (organized files)
 }
 
 export default App;
