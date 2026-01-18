@@ -6,17 +6,15 @@ function App() {
   const [error, setError] = useState<string | null>(null)
 
   const handleToggleCategories = async () => {
-    // If categories are already shown, hide them
     if (categories) {
       setCategories(null)
       setError(null)
       return
     }
 
-    // Otherwise, fetch categories
     try {
       const { data, error } = await supabase
-        .from('exercises')         // Replace with your table name
+        .from('exercises')
         .select('category')
 
       if (error) throw error
@@ -37,22 +35,25 @@ function App() {
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <button onClick={handleToggleCategories} style={{ padding: '0.5rem 1rem' }}>
-        {categories ? '...' : '...'}
-      </button>
+      {/* Container to prevent button movement */}
+      <div style={{ display: 'flex', flexDirection: 'column', rowGap: '1rem', minHeight: '120px' }}>
+        <button onClick={handleToggleCategories} style={{ padding: '0.5rem 1rem', alignSelf: 'flex-start' }}>
+          {categories ? '...' : '...'}
+        </button>
 
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+        {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
-      {categories && categories.length > 0 && (
-        <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
-          {categories.map((category) => (
-            <label key={category} style={{ display: 'flex', alignItems: 'center' }}>
-              <input type="checkbox" />
-              <span style={{ marginLeft: '0.3rem' }}>{category}</span>
-            </label>
-          ))}
-        </div>
-      )}
+        {categories && categories.length > 0 && (
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            {categories.map((category) => (
+              <label key={category} style={{ display: 'flex', alignItems: 'center' }}>
+                <input type="checkbox" />
+                <span style={{ marginLeft: '0.3rem' }}>{category}</span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
