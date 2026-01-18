@@ -1,34 +1,59 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { supabase } from './supabaseClient'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [categories, setCategories] = useState<string[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleToggleCategories = async () => {
+    // If categories are already shown, hide them
+    if (categories) {
+      setCategories(null)
+      setError(null)
+      return
+    }
+
+    // Otherwise, fetch categories
+    try {
+      const { data, error } = await supabase
+        .from('exercises')         // Replace with your table name
+        .select('category')
+
+      if (error) throw error
+
+      if (!data) {
+        setCategories([])
+        return
+      }
+
+      const uniqueCategories = Array.from(new Set(data.map((row: any) => row.category)))
+      setCategories(uniqueCategories)
+      setError(null)
+    } catch (err: any) {
+      setError(err.message)
+      setCategories(null)
+    }
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+      <button onClick={handleToggleCategories} style={{ padding: '0.5rem 1rem' }}>
+        {categories ? '...' : '...'}
+      </button>
+
+      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+
+      {categories && categories.length > 0 && (
+        <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
+          {categories.map((category) => (
+            <label key={category} style={{ display: 'flex', alignItems: 'center' }}>
+              <input type="checkbox" />
+              <span style={{ marginLeft: '0.3rem' }}>{category}</span>
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
