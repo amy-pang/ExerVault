@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import Header from './Header';
-import ExerciseCard from './ExerciseCard';
-import Sidebar from './Sidebar';
+import Header from '../components/Header';
+import ExerciseCard from '../components/ExerciseCard';
+import Sidebar from '../components/Sidebar';
 
 interface Exercise {
   id: string;
