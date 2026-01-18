@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import Header from '../components/Header';
+import HomePage from './HomePage'
 
 function App() {
   const handleSearch = (query: string) => {
@@ -13,7 +14,7 @@ function App() {
       <div className="header-wrapper">
         <Header onSearch={handleSearch} />
       </div>
-
+      <HomePage />
     </>
   )
 }
