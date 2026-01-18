@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import Header from '../components/HeaderCart';
+import Header from '../components/Header';
 import ExerciseCard from '../components/ExerciseCard';
 import Sidebar from '../components/Sidebar';
 
@@ -84,12 +84,10 @@ export default function ExerciseListPage() {
 
   return (
     <div className="phythera-app">
-      {/*<Header 
-        searchQuery={searchQuery}
-        onSearchChange={handleSearchChange}
-        sortBy={sortBy}
-        onSortChange={handleSortChange}
-      />*/}
+      <Header 
+        query={searchQuery}
+        onQueryChange={handleSearchChange}
+      />
 
       <div className="main-row">
         <div className="exercise-list-col">
