@@ -84,12 +84,12 @@ export default function ExerciseListPage() {
 
   return (
     <div className="phythera-app">
-      <Header 
+      {/*<Header 
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
         sortBy={sortBy}
         onSortChange={handleSortChange}
-      />
+      />*/}
 
       <div className="main-row">
         <div className="exercise-list-col">
