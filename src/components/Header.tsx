@@ -1,41 +1,43 @@
-import { useState } from 'react'
-import { AiOutlineHome, AiOutlineSearch, AiOutlineShoppingCart } from "react-icons/ai";
-import './Header.css'
+import { Link } from 'react-router-dom';
+import { FaHome, FaSearch } from 'react-icons/fa';
 
-type HeaderProps = {
-  onSearch: (query: string) => void;
-};
+interface HeaderProps {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  sortBy: string;
+  onSortChange: (sortBy: string) => void;
+}
 
-function Header({ onSearch }: HeaderProps) {
-  const [query, setQuery] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSearch(query.trim());
-  };
-
+export default function Header({ searchQuery, onSearchChange, sortBy, onSortChange }: HeaderProps) {
   return (
-    <div className="header-wrapper">
-        <header className="header-container">
-
-            <AiOutlineHome className="header-icon" />
-
-            <form className="search-bar" onSubmit={handleSubmit}>
+    <div className="header-row">
+      <div className="header-left">
+        <Link to="/">
+          <button className="home-button">
+            <FaHome />
+          </button>
+        </Link>
+        <div className="search-container">
+          <div className="search-input-wrapper">
             <input
-                className="search-input"
-                placeholder="Search..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
+              type="text"
+              className="search-input"
+              placeholder="Curl"
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
             />
-            <button className="search-icon" type="submit">
-                <AiOutlineSearch size={20} />
-            </button>
-            </form>
-
-            <AiOutlineShoppingCart className="header-icon" />
-        </header>
+            <FaSearch className="search-icon" />
+          </div>
+        </div>
+      </div>
+      <select 
+        className="sort-dropdown" 
+        value={sortBy} 
+        onChange={(e) => onSortChange(e.target.value)}
+      >
+        <option value="name">Sort by: Name</option>
+        <option value="category">Sort by: Category</option>
+      </select>
     </div>
   );
 }
-
-export default Header;
