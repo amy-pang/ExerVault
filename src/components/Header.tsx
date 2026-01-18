@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AiOutlineHome, AiOutlineSearch, AiOutlineShoppingCart } from "react-icons/ai";
 import './Header.css'
 import { DummyExercises } from '../dummy_exercises';
+import { supabase } from "../supabaseClient";
 
 type HeaderProps = {
   query: string;
