@@ -63,3 +63,56 @@
   cursor: pointer;
   padding: 0;
 }
+
+/* Important: anchor for absolutely positioned popup */
+.search-wrap {
+  position: relative;
+  width: min(520px, 60vw); /* adjust to your layout */
+}
+
+/* Popup dropdown that floats OVER the page */
+.search-popup {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+
+  background: white;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+
+  z-index: 9999; /* ensures it overlays page content */
+  overflow: hidden;
+}
+
+/* Rows inside popup */
+.search-popup-row {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: none;
+  background: white;
+  cursor: pointer;
+}
+
+.search-popup-row:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+.muted {
+  color: rgba(0,0,0,0.55);
+  cursor: default;
+}
+
+.row-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: black;
+}
+
+.row-sub {
+  font-size: 12px;
+  color: rgba(0,0,0,0.6);
+  margin-top: 2px;
+}

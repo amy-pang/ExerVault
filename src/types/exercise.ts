@@ -1,5 +1,7 @@
 export type Exercise = {
-  id: number;
+  id: string;
   name: string;
   category: string;
+  description: string;
+  image_path: string;
 };
