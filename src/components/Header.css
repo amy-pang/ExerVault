@@ -28,16 +28,17 @@
 
 /* Search bar stretching across center */
 .search-bar {
-  flex-grow: 1;              /* this makes it fill the entire middle area */
+  flex: 1;
   display: flex;
   align-items: center;
 
-  margin: 0 32px;            /* spacing between icons */
-  background: #dbeafe;       /* your light blue bar */
+  margin-left: 16px;   /* ⬅️ smaller */
+  margin-right: 32px;  /* keep more space on the right */
+
+  background: #dbeafe;
   border-radius: 30px;
   padding: 10px 18px;
-
-  max-width: 900px;
+  min-width: 0;
 }
 
 /* Search input */
@@ -67,7 +68,8 @@
 /* Important: anchor for absolutely positioned popup */
 .search-wrap {
   position: relative;
-  width: min(520px, 60vw); /* adjust to your layout */
+  width: 75vw; /* adjust to your layout */
+  margin-right: 5vw;
 }
 
 /* Popup dropdown that floats OVER the page */
@@ -83,7 +85,7 @@
   box-shadow: 0 16px 40px rgba(0,0,0,0.12);
 
   z-index: 9999; /* ensures it overlays page content */
-  overflow: hidden;
+  overflow: auto;
 }
 
 /* Rows inside popup */

@@ -87,9 +87,6 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
                 if (e.key === "Escape") setOpen(false);
               }}
             />
-            <button className="search-icon" type="button" aria-label="Search">
-              <AiOutlineSearch size={20} color="black" />
-            </button>
           </div>
 
           {/* Popup dropdown */}
@@ -121,7 +118,7 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
           )}
         </div>
 
-        <ShoppingCart className="header-icon" />
+        <ShoppingCart className="header-icon" color="black" />
       </header>
     </div>
   );
