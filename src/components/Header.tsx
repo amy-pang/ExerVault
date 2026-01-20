@@ -123,5 +123,3 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
     </div>
   );
 }
-
-export default Header;
