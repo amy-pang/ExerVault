@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import Header from '../components/Header';
+import Header from '../components/HeaderCart';
 import ExerciseCard from '../components/ExerciseCard';
 import Sidebar from '../components/Sidebar';
 
