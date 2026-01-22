@@ -5,7 +5,7 @@ import ExerciseListPage from './ExerciseListPage';
 import AdminPanel from '../components/AdminPanel';
 import HomePage from './HomePage'
 import Header from '../components/Header';
-import ExercisePage from '../ExercisePage';
+import ExercisePage from './ExercisePage';
 
 function App() {
   const [query, setQuery] = useState("");
