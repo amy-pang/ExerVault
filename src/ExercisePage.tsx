@@ -49,6 +49,13 @@ export default function ExercisePage() {
         console.log('Generated public URL:', urlData.publicUrl);
         setImageUrl(urlData.publicUrl);
       }
+      else {
+        console.log("No image available");
+        const { data: urlData } = supabase.storage
+          .from('exercise-images')
+          .getPublicUrl("no_image.png");
+        setImageUrl(urlData.publicUrl);
+      }
       
       setLoading(false);
     }
