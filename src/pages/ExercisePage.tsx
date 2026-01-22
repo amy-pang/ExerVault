@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { supabase } from './supabaseClient';
+import { supabase } from '../supabaseClient';
 import "./ExercisePage.css";
 
 export default function ExercisePage() {
@@ -11,6 +11,7 @@ export default function ExercisePage() {
   const [imageDimensions, setImageDimensions] = useState({ width: 260, height: 260 });
   
   const [frequency, setFrequency] = useState("");
+  const [frequencyType, setFrequencyType] = useState("week"); // "week", "day", or "month"
   const [sets, setSets] = useState("");
   const [reps, setReps] = useState("");
   const [repType, setRepType] = useState("reps"); // "reps" or "seconds"
@@ -66,6 +67,7 @@ export default function ExercisePage() {
   // Load saved values on mount
   useEffect(() => {
     setFrequency(localStorage.getItem("frequency") || "");
+    setFrequencyType(localStorage.getItem("frequencyType") || "week");
     setSets(localStorage.getItem("sets") || "");
     setReps(localStorage.getItem("reps") || "");
     setRepType(localStorage.getItem("repType") || "reps");
@@ -74,6 +76,7 @@ export default function ExercisePage() {
 
   // Persist values
   useEffect(() => localStorage.setItem("frequency", frequency), [frequency]);
+  useEffect(() => localStorage.setItem("frequencyType", frequencyType), [frequencyType]);
   useEffect(() => localStorage.setItem("sets", sets), [sets]);
   useEffect(() => localStorage.setItem("reps", reps), [reps]);
   useEffect(() => localStorage.setItem("repType", repType), [repType]);
@@ -125,7 +128,15 @@ export default function ExercisePage() {
               value={frequency}
               onChange={(e) => setFrequency(e.target.value)}
             />
-            <span className="inputDesc">Times/Week</span>
+            <select
+              className="dropdown"
+              value={frequencyType}
+              onChange={(e) => setFrequencyType(e.target.value)}
+            >
+              <option value="day">Times/Day</option>
+              <option value="week">Times/Week</option>
+              <option value="month">Times/Month</option>
+            </select>
           </div>
 
           <div className="inputRow">
