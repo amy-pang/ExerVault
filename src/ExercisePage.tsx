@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { supabase } from './supabaseClient';
 import "./ExercisePage.css";
 
 export default function ExercisePage() {
-  const id = "0787f5c0-0db9-4f7d-860e-7870597c7c84"; // Replace with your actual exercise ID
+  const { id } = useParams();
   const [exercise, setExercise] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [imageUrl, setImageUrl] = useState("");
@@ -21,12 +22,6 @@ export default function ExercisePage() {
     async function fetchExercise() {
       if (!id) return;
       console.log(import.meta.env.VITE_SUPABASE_URL);
-      // First, let's see all exercises in the table
-      const { data: allExercises } = await supabase
-        .from('exercises')
-        .select('*');
-      console.log('All exercises:', allExercises);
-      
       const { data, error } = await supabase
         .from('exercises')
         .select('*')
@@ -43,11 +38,15 @@ export default function ExercisePage() {
       setExercise(data);
       setDescription(data.description || "");
       
+      // Debug: log the image path
+      console.log('Image path from DB:', data.image_path);
+      
       // Get image URL from storage
       if (data.image_path) {
         const { data: urlData } = supabase.storage
           .from('exercise-images')
           .getPublicUrl(data.image_path);
+        console.log('Generated public URL:', urlData.publicUrl);
         setImageUrl(urlData.publicUrl);
       }
       

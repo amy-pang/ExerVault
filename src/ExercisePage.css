@@ -11,6 +11,7 @@
   width: 100vw;
   /* Fill viewport height so the page visually fills the screen */
   min-height: 100vh;
+  background: white;
 }
 
 /* --- TOP BAR --- */

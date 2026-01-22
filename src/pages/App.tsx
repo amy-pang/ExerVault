@@ -19,6 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/exercise-list" element={<ExerciseListPage />} />
+        <Route path="/exercise/:id" element={<ExercisePage />} />
         <Route path="/admin" element={<AdminPanel />} />
       </Routes>
     </BrowserRouter>
