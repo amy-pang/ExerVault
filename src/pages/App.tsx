@@ -1,22 +1,28 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from "react";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import './App.css';
+import ExerciseListPage from './ExerciseListPage';
+import AdminPanel from '../components/AdminPanel';
+import HomePage from './HomePage'
 import Header from '../components/Header';
 import ExercisePage from '../ExercisePage';
 
 function App() {
-  const handleSearch = (query: string) => {
-    console.log("Searching for:", query);
-    // You will replace this with filtering your Supabase/list data
-  };
+  const [query, setQuery] = useState("");
 
   return (
-    <>
-      <div className="header-wrapper">
-        <Header onSearch={handleSearch} />
-      </div>
-      <ExercisePage />
-    </>
-  )
+    <BrowserRouter>
+      <Header
+        query={query}
+        onQueryChange={setQuery}
+      />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/exercise-list" element={<ExerciseListPage />} />
+        <Route path="/admin" element={<AdminPanel />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
