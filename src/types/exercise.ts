@@ -35,8 +35,8 @@ export class Cart {
     this.saveCart();
   }
 
-  removeFromCart(addedAt: number): void {
-    this.exercises = this.exercises.filter(ex => ex.addedAt !== addedAt);
+  removeFromCart(id: string): void {
+    this.exercises = this.exercises.filter(ex => ex.id !== id);
     this.saveCart();
   }
 
