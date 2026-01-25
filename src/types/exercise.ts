@@ -22,7 +22,16 @@ export class Cart {
   }
 
   addToCart(newExercise: Exercise): void {
-    this.exercises = [...this.exercises, { ...newExercise, addedAt: Date.now() }];
+    const existingIndex = this.exercises.findIndex(ex => ex.id === newExercise.id);
+    
+    if (existingIndex !== -1) {
+      // Update existing exercise
+      this.exercises[existingIndex] = { ...newExercise, addedAt: this.exercises[existingIndex].addedAt };
+    } else {
+      // Add new exercise
+      this.exercises = [...this.exercises, { ...newExercise, addedAt: Date.now() }];
+    }
+    
     this.saveCart();
   }
 

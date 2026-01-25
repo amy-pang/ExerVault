@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from '../supabaseClient';
+import { Cart } from '../types/exercise';
+import type { Exercise } from '../types/exercise';
 import "./ExercisePage.css";
 
 export default function ExercisePage() {
@@ -9,6 +11,7 @@ export default function ExercisePage() {
   const [loading, setLoading] = useState(true);
   const [imageUrl, setImageUrl] = useState("");
   const [imageDimensions, setImageDimensions] = useState({ width: 260, height: 260 });
+  const [cart] = useState(() => new Cart());
   
   const [frequency, setFrequency] = useState("");
   const [frequencyType, setFrequencyType] = useState("week"); // "week", "day", or "month"
@@ -17,6 +20,30 @@ export default function ExercisePage() {
   const [repType, setRepType] = useState("reps"); // "reps" or "seconds"
   const [description, setDescription] = useState("");
   const [comments, setComments] = useState("");
+  const [isInCart, setIsInCart] = useState(false);
+
+  const handleAddToList = () => {
+    if (!exercise) return;
+
+    const exerciseToAdd: Exercise = {
+      id: exercise.id,
+      name: exercise.name,
+      category: exercise.category,
+      description: description || exercise.description,
+      image_path: exercise.image_path,
+      frequency,
+      frequencyType: frequencyType as 'week' | 'day' | 'month',
+      sets,
+      reps,
+      repType: repType as 'reps' | 'seconds',
+      comments,
+    };
+
+    cart.addToCart(exerciseToAdd);
+    setIsInCart(true);
+    console.log(`${exercise.name} added to list!`);
+    console.log(cart.getExercises());
+  };
 
   // Fetch exercise from database
   useEffect(() => {
@@ -38,6 +65,11 @@ export default function ExercisePage() {
       
       setExercise(data);
       setDescription(data.description || "");
+      
+      // Check if exercise is already in cart
+      const cartExercises = cart.getExercises();
+      const existsInCart = cartExercises.some(ex => ex.id === id);
+      setIsInCart(existsInCart);
       
       // Debug: log the image path
       console.log('Image path from DB:', data.image_path);
@@ -188,7 +220,7 @@ export default function ExercisePage() {
             onChange={(e) => setComments(e.target.value)}
           />
 
-          <button className="addBtn">Add to list</button>
+          <button className="addBtn" onClick={handleAddToList}>{isInCart ? "Update in list" : "Add to list"}</button>
         </div>
 
       </div>
