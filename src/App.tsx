@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
-import ExerciseListPage from './ExerciseListPage';
-import AdminPanel from '../components/AdminPanel';
-import HomePage from './HomePage'
-import Header from '../components/Header';
-import ExercisePage from './ExercisePage';
-import ExerciseOverview from '../components/ExerciseOverview/ExerciseOverview'
+import ExerciseListPage from './pages/ExerciseListPage';
+import AdminPanel from './components/AdminPanel';
+import HomePage from './pages/HomePage'
+import Header from './components/Header';
+import ExercisePage from './pages/ExercisePage';
+import ExerciseOverview from './components/ExerciseOverview/ExerciseOverview'
 
 function App() {
   const [query, setQuery] = useState("");
