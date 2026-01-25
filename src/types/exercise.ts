@@ -12,3 +12,44 @@ export type Exercise = {
   comments?: string;
   addedAt?: number;
 };
+
+// Shopping Cart Class
+export class Cart {
+  private exercises: Exercise[];
+
+  constructor() {
+    this.exercises = this.loadCart();
+  }
+
+  addToCart(newExercise: Exercise): void {
+    this.exercises = [...this.exercises, { ...newExercise, addedAt: Date.now() }];
+    this.saveCart();
+  }
+
+  removeFromCart(addedAt: number): void {
+    this.exercises = this.exercises.filter(ex => ex.addedAt !== addedAt);
+    this.saveCart();
+  }
+
+  clearCart(): void {
+    this.exercises = [];
+    this.saveCart();
+  }
+
+  getCartCount(): number {
+    return this.exercises.length;
+  }
+
+  getExercises(): Exercise[] {
+    return this.exercises;
+  }
+
+  private saveCart(): void {
+    localStorage.setItem('exerciseCart', JSON.stringify(this.exercises));
+  }
+
+  private loadCart(): Exercise[] {
+    const saved = localStorage.getItem('exerciseCart');
+    return saved ? JSON.parse(saved) : [];
+  }
+};
