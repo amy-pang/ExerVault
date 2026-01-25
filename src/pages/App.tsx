@@ -5,6 +5,7 @@ import ExerciseListPage from './ExerciseListPage';
 import AdminPanel from '../components/AdminPanel';
 import HomePage from './HomePage'
 import Header from '../components/Header';
+import ExercisePage from './ExercisePage';
 
 function App() {
   const [query, setQuery] = useState("");
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/exercise-list" element={<ExerciseListPage />} />
+        <Route path="/exercise/:id" element={<ExercisePage />} />
         <Route path="/admin" element={<AdminPanel />} />
       </Routes>
     </BrowserRouter>
