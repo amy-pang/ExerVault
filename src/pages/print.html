@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Workout Print</title>
+  <link rel="stylesheet" href="print.css" />
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.css"
+  />
+</head>
+
+<body>
+  <main id="app">
+
+    <!-- hidden when printing -->
+    <section id="controls">
+      <h1>Customize + Print</h1>
+
+      <label>
+        Font size
+        <select id="fontSize">
+          <option value="14">Small</option>
+          <option value="16" selected>Medium</option>
+          <option value="18">Large</option>
+        </select>
+      </label>
+
+      <label>
+        Color
+        <select id="color">
+          <option value="#1a4b7a">Blue</option>
+          <option value="#000">Black</option>
+        </select>
+      </label>
+
+      <button id="printBtn">Print Now</button>
+    </section>
+
+    <!-- printing area -->
+    <section id="printArea">
+      <h2 class="heading">Workout #1</h2>
+
+      <div class="exercise">
+        <div class="imgBox">img</div>
+        <p class="text">
+          text (directions, instructions)<br />
+          text (directions, instructions)
+        </p>
+      </div>
+
+      <h3 class="heading">Next Exercise</h3>
+    </section>
+
+  </main>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.js"></script>
+
+  <!--  script -->
+  <script src="print.js"></script>
+</body>
+</html>

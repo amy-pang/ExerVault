@@ -1,0 +1,81 @@
+/* default*/
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f7fbff;
+  color: #333;
+}
+
+#controls {
+  padding: 20px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin-bottom: 20px;
+}
+
+#printArea {
+  background: white;
+  padding: 24px;
+  width: 800px;
+  margin: 0 auto;
+}
+
+.heading {
+  font-weight: bold;
+}
+
+.exercise {
+  display: flex;
+  gap: 16px;
+}
+
+.imgBox {
+  width: 120px;
+  height: 120px;
+  border: 1px solid #666;
+  display: grid;
+  place-items: center;
+}
+
+/* ===== printing setup ===== */
+* {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+
+@media print {
+  @page {
+    margin: 0.8in;
+  }
+
+  body {
+    background: white;
+  }
+
+  
+  #controls {
+    display: none;
+  }
+
+  
+  #printArea {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+
+* {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+@media print {
+  @page {
+    margin: 0.8in;
+  }
+
+  /* hide controls if user prints normally */
+  #controls { display: none !important; }
+}
