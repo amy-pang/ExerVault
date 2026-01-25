@@ -22,7 +22,6 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
   const [loading, setLoading] = useState(false);
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const lastRequestId = useRef(0);
 
   // Close popup when clicking outside
   useEffect(() => {
