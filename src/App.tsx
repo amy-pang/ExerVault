@@ -7,9 +7,11 @@ import HomePage from './pages/HomePage'
 import Header from './components/Header';
 import ExercisePage from './pages/ExercisePage';
 import ExerciseOverview from './components/ExerciseOverview/ExerciseOverview'
+import { Cart } from './types/exercise';
 
 function App() {
   const [query, setQuery] = useState("");
+  const cart = new Cart();  // PLEASE USE THIS FOR THE SHOPPING CART 🙏
 
   return (
     <BrowserRouter>
