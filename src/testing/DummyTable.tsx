@@ -1,5 +1,5 @@
 import React from "react";
-import type { Exercise } from "./types/exercise";
+import type { Exercise } from "../types/exercise";
 
 type DummyTableProps = {
   data: Exercise[];
