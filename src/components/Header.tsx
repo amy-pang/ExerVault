@@ -75,7 +75,9 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
   return (
     <div className="header-wrapper">
       <header className="header-container">
-        <AiOutlineHome className="header-icon" color="black" />
+        <Link to="/" className="header-home-link">
+          <AiOutlineHome className="header-icon" color="black" />
+        </Link>
 
         {/* This wrapper anchors the popup underneath the input */}
         <div className="search-wrap" ref={wrapperRef}>
@@ -118,7 +120,9 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
           )}
         </div>
 
-        <ShoppingCart className="header-icon" color="black" />
+        <Link to="/cart" className="header-home-link">
+          <ShoppingCart className="header-icon" color="black" />
+        </Link>
       </header>
     </div>
   );
