@@ -1,144 +1,265 @@
-/* Full-width wrapper across the page */
-.header-wrapper {
-  width: 100%;
-  background: white;
-  border-bottom: 1px solid #eee;
-  margin: 0;
-  padding: 0;
+/* ---------- Design tokens (same palette, just refined) ---------- */
+:root {
+  --bg: #ffffff;
+  --border: rgba(0, 0, 0, 0.08);
+  --text: rgba(0, 0, 0, 0.88);
+  --muted: rgba(0, 0, 0, 0.55);
+
+  --blue-100: #dbeafe; /* your current light blue */
+  --blue-200: #bfdbfe; /* slightly deeper for borders/focus */
+  --shadow-sm: 0 1px 0 rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.10);
+  --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.14);
+
+  --radius-pill: 999px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+
+  --focus: 0 0 0 4px rgba(59, 130, 246, 0.18); /* soft blue ring */
 }
 
-/* Internal container controls alignment */
+/* ---------- Wrapper ---------- */
+.header-wrapper {
+  width: 100%;
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+
+  /* less flat: subtle bottom border + tiny shadow */
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Container ---------- */
 .header-container {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 16px 32px;
+  padding: 14px 28px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 18px;
+
   box-sizing: border-box;
+}
+
+/* ---------- Home/cart links (click target + hover) ---------- */
+.header-home-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+
+  text-decoration: none;
+  color: inherit;
+
+  transition: background 140ms ease, transform 140ms ease;
+}
+
+.header-home-link:hover {
+  transform: translateY(-1px);
+}
+
+.header-home-link:active {
+  transform: translateY(0);
 }
 
 /* Icons */
 .header-icon {
-  font-size: 24px;
+  font-size: 22px;
   cursor: pointer;
 }
 
-/* Search bar stretching across center */
-.search-bar {
+/* ---------- Search layout ---------- */
+/* Anchors popup. Also controls overall width cleanly. */
+.search-wrap {
+  position: relative;
   flex: 1;
+  min-width: 260px;
+  max-width: 840px;
+}
+
+/* Search “pill” with depth */
+.search-bar {
   display: flex;
   align-items: center;
 
-  margin-left: 16px;   /* ⬅️ smaller */
-  margin-right: 32px;  /* keep more space on the right */
+  background: var(--blue-100);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-pill);
 
-  background: #dbeafe;
-  border-radius: 30px;
-  padding: 10px 18px;
+  padding: 10px 14px;
   min-width: 0;
+
+  /* modern depth */
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 10px 22px rgba(0, 0, 0, 0.06);
+
+  transition: box-shadow 160ms ease, border-color 160ms ease,
+    transform 160ms ease;
 }
 
-/* Search input */
+/* Lift on hover */
+.search-wrap:hover .search-bar {
+  border-color: rgba(0, 0, 0, 0.10);
+  transform: translateY(-1px);
+}
+
+/* When focusing inside, add a clean focus ring */
+.search-bar:focus-within {
+  border-color: rgba(59, 130, 246, 0.35);
+  box-shadow: var(--focus),
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 12px 28px rgba(0, 0, 0, 0.10);
+  transform: translateY(-1px);
+}
+
+/* Input */
 .search-input {
-  flex-grow: 1;
+  flex: 1;
   border: none;
   background: transparent;
-  font-size: 1rem;
-  padding: 6px;
+
+  font-size: 0.98rem;
+  line-height: 1.1;
+  padding: 6px 8px;
+
   outline: none;
-  color: #333;
+  color: var(--text);
 }
 
+/* Placeholder: your old one was white (hard to read on light blue) */
 .search-input::placeholder {
-  color: #fff;
-  opacity: 0.9;
+  color: rgba(0, 0, 0, 0.45);
 }
 
-/* Search icon button */
+/* Optional: if you later add a search icon button */
 .search-icon {
-  background: none;
-  border: none;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
   cursor: pointer;
-  padding: 0;
+
+  height: 34px;
+  width: 34px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: background 140ms ease, transform 140ms ease;
 }
 
-/* Important: anchor for absolutely positioned popup */
-.search-wrap {
-  position: relative;
-  width: 75vw; /* adjust to your layout */
-  margin-right: 5vw;
+.search-icon:hover {
+  background: rgba(255, 255, 255, 0.75);
+  transform: translateY(-1px);
 }
 
-/* Popup dropdown that floats OVER the page */
+/* ---------- Popup dropdown ---------- */
 .search-popup {
   position: absolute;
   top: calc(100% + 10px);
   left: 0;
   right: 0;
 
-  background: white;
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 14px;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
 
-  z-index: 9999; /* ensures it overlays page content */
-  overflow: auto;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden; /* clean rounded corners for hover states */
+  z-index: 9999;
+
+  max-height: 320px;
+  overflow-y: auto;
 }
 
-/* Rows inside popup */
-.search-popup-row {
-  width: 100%;
-  text-align: left;
-  padding: 10px 12px;
-  border: none;
-  background: white;
-  cursor: pointer;
+/* Optional scrollbar polish (supported browsers only) */
+.search-popup::-webkit-scrollbar {
+  width: 10px;
+}
+.search-popup::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  border: 2px solid #fff;
 }
 
-.search-popup-row:hover {
-  background: rgba(0,0,0,0.04);
-}
-
-.muted {
-  color: rgba(0,0,0,0.55);
-  cursor: default;
-}
-
-.row-title {
-  font-weight: 600;
-  font-size: 14px;
-  color: black;
-}
-
-.row-sub {
-  font-size: 12px;
-  color: rgba(0,0,0,0.6);
-  margin-top: 2px;
-}
-
-/* Make both <button> and <a> look identical in the dropdown */
+/* Row base (applies to <Link>) */
 .search-popup-row {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 14px;
 
   background: transparent;
   border: 0;
   text-align: left;
+
   cursor: pointer;
 
-  /* anchor reset */
   color: inherit;
   text-decoration: none;
   font-weight: inherit;
+
+  transition: background 120ms ease, transform 120ms ease;
 }
 
+/* Modern hover: subtle tint + slight shift */
 .search-popup-row:hover {
-  background: rgba(0, 0, 0, 0.06);
+  background: rgba(59, 130, 246, 0.08);
+  transform: translateX(1px);
+}
+
+/* Add separation without harsh lines */
+.search-popup-row + .search-popup-row {
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Text */
+.row-title {
+  font-weight: 650;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.90);
+  letter-spacing: 0.1px;
+}
+
+.row-sub {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.55);
+  margin-top: 2px;
+}
+
+.muted {
+  color: var(--muted);
+  cursor: default;
+}
+
+/* Muted rows shouldn't hover like links */
+.search-popup-row.muted:hover {
+  background: transparent;
+  transform: none;
+}
+
+/* ---------- Responsive tweaks ---------- */
+@media (max-width: 720px) {
+  .header-container {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .search-wrap {
+    max-width: none;
+  }
+
+  .header-home-link {
+    width: 38px;
+    height: 38px;
+  }
 }
