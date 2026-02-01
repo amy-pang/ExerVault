@@ -3,6 +3,8 @@ import { AiOutlineHome, AiOutlineSearch } from "react-icons/ai";
 import { ShoppingCart } from "lucide-react";
 import "./Header.css";
 import { supabase } from "../supabaseClient";
+import ExercisePage from "../pages/ExercisePage";
+import { Link } from "react-router-dom";
 
 type HeaderProps = {
   query: string;
@@ -20,9 +22,11 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
   const [results, setResults] = useState<ExerciseResult[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [exerciseOpen, setExerciseOpen] = useState(false);
+  const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(null);
+
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const lastRequestId = useRef(0);
 
   // Close popup when clicking outside
   useEffect(() => {
@@ -71,7 +75,9 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
   return (
     <div className="header-wrapper">
       <header className="header-container">
-        <AiOutlineHome className="header-icon" color="black" />
+        <Link to="/" className="header-home-link">
+          <AiOutlineHome className="header-icon" color="black" />
+        </Link>
 
         {/* This wrapper anchors the popup underneath the input */}
         <div className="search-wrap" ref={wrapperRef}>
@@ -98,27 +104,25 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
                 <div className="search-popup-row muted">No matches</div>
               ) : (
                 results.map((ex) => (
-                  <button
+                  <Link
                     key={ex.id}
-                    type="button"
+                    to={`/exercise/${ex.id}`}
                     className="search-popup-row"
-                    // prevents input blur from closing popup before click registers
                     onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => {
-                      setOpen(false);
-                      onPickExercise?.(ex.id);
-                    }}
+                    onClick={() => setOpen(false)}
                   >
                     <div className="row-title">{ex.name}</div>
                     <div className="row-sub">{ex.category}</div>
-                  </button>
+                  </Link>
                 ))
               )}
             </div>
           )}
         </div>
 
-        <ShoppingCart className="header-icon" color="black" />
+        <Link to="/cart" className="header-home-link">
+          <ShoppingCart className="header-icon" color="black" />
+        </Link>
       </header>
     </div>
   );
