@@ -1,89 +1,90 @@
 .page {
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  box-sizing: border-box;
-  /* Make this section full-bleed across the viewport */
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  width: 100vw;
-  /* Fill viewport height so the page visually fills the screen */
+  /* remove the full-bleed hack; keep clean centered layout like header */
   min-height: 100vh;
-  background: white;
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial,
+    sans-serif;
+  color: var(--text);
+
+  box-sizing: border-box;
+  padding: 28px 20px;
 }
 
-/* --- TOP BAR --- */
-.topBar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 5px;
-}
-
-.icon {
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.searchWrapper {
-  display: flex;
-  align-items: center;
-  width: 50%;
-  position: relative;
-}
-
-.searchBar {
-  width: 100%;
-  padding: 12px 18px;
-  background: white;
-  border: 1px solid #d1d7de;
-  border-radius: 20px;
-  font-size: 14px;
-}
-
-.searchIcon {
-  position: absolute;
-  right: 12px;
-  font-size: 18px;
-}
-
-/* --- TITLE --- */
+/* Title area */
 .exerciseTitle {
-  font-size: 32px;
-  margin-top: 20px;
-  color: #666;
+  max-width: 1100px;
+  margin: 8px auto 18px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+  color: var(--text);
 }
 
 .category {
-  font-size: 20px;
-  margin-left: 10px;
-  color: #666;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.70);
+
+  background: var(--blue-100);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
 }
 
-/* --- MAIN LAYOUT --- */
+/* Main layout: card-like sections */
 .content {
+  max-width: 1100px;
+  margin: 0 auto;
+
   display: flex;
-  justify-content: space-between;
-  margin-top: 30px;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+/* Left / Right surfaces */
+.leftSection,
+.rightSection {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  padding: 18px;
 }
 
 .leftSection {
   width: 40%;
 }
 
-/* --- IMAGE PLACEHOLDER --- */
+.rightSection {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Image card */
 .imagePlaceholder {
   width: 260px;
   height: 260px;
-  border: 2px solid black;
-  position: relative;
-  margin-bottom: 20px;
+
+  background: var(--surface-2);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: var(--radius-lg);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   overflow: hidden;
+  margin-bottom: 16px;
+
+  /* subtle depth like header */
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 10px 22px rgba(0, 0, 0, 0.06);
 }
 
 .imagePlaceholder img {
@@ -92,112 +93,185 @@
   object-fit: contain;
 }
 
-.circle {
-  width: 40px;
-  height: 40px;
-  border: 3px solid black;
-  border-radius: 50%;
-  position: absolute;
-  top: 20px;
-  left: 20px;
-}
-
-.triangle {
-  width: 0;
-  height: 0;
-  border-left: 110px solid transparent;
-  border-right: 110px solid transparent;
-  border-top: 140px solid black;
-  position: absolute;
-  bottom: 10px;
-  left: 20px;
-}
-
-/* --- INPUT ROWS --- */
+/* Input rows */
 .inputRow {
   display: flex;
   align-items: center;
-  margin-bottom: 18px;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
+/* Label becomes a pill chip instead of a box */
 .label {
-  background: #cfe6ff;
-  padding: 10px 16px;
-  border-radius: 4px;
   width: 120px;
-  display: inline-block;
-  font-weight: bold;
-  margin-right: 10px;
+  flex: 0 0 120px;
+
+  font-weight: 650;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.75);
+
+  background: var(--blue-100);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 8px 12px;
+  border-radius: var(--radius-pill);
+}
+
+/* Inputs: consistent rounded + subtle shadow */
+.inputBox,
+.dropdown {
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  background: #fff;
+  color: var(--text);
+
+  padding: 0 12px;
+  font-size: 14px;
+  line-height: 1;
+
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  transition: border-color 160ms ease, box-shadow 160ms ease,
+    transform 160ms ease;
 }
 
 .inputBox {
-  width: 70px;
-  height: 32px;
-  border: 1px solid #555;
-  margin-right: 10px;
-  padding-left: 6px;
+  width: 86px; /* a little wider than before */
 }
 
-/* Make input-like elements have a white background and good focus outline */
-input, textarea, select, .inputBox {
-  background: white;
-  color: #111;
-  box-sizing: border-box;
+/* Dropdown width feels nicer */
+.dropdown {
+  min-width: 130px;
+  cursor: pointer;
 }
 
-input:focus, textarea:focus, select:focus, .inputBox:focus {
-  outline: 3px solid rgba(99,102,241,0.12);
-  outline-offset: 2px;
+/* Focus: match header (no blue ring glow). Keep subtle border cue. */
+.inputBox:focus,
+.dropdown:focus,
+.description:focus,
+.comments:focus {
+  outline: none;
+  border-color: rgba(0, 0, 0, 0.22);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 10px 22px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
 }
 
+/* Optional hover lift */
+.inputBox:hover,
+.dropdown:hover {
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+/* Small helper text */
 .inputDesc {
-  font-size: 14px;
-  max-width: 160px;
+  font-size: 13px;
+  color: var(--muted);
+  margin-left: 2px;
 }
 
-/* --- RIGHT SECTION --- */
-.rightSection {
-  width: 55%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
+/* Textareas: same style language */
 .description,
 .comments {
   width: 100%;
-  border: 1px solid #aaa;
-  background: white;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 16px;
-  resize: none;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  background: #fff;
+  border-radius: var(--radius-lg);
+
+  padding: 12px 12px;
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--text);
+
+  resize: vertical; /* nicer than none */
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  transition: border-color 160ms ease, box-shadow 160ms ease,
+    transform 160ms ease;
 }
 
 .description {
-  height: 160px;
+  min-height: 170px;
 }
 
 .comments {
-  height: 110px;
+  min-height: 120px;
 }
 
+.description::placeholder,
+.comments::placeholder {
+  color: rgba(0, 0, 0, 0.40);
+}
+
+/* Button: primary pill with depth, matches header hover */
 .addBtn {
-  width: 180px;
-  height: 60px;
-  background: #cfe6ff;
-  border: none;
-  border-radius: 12px;
-  font-size: 20px;
+  margin-top: 6px;
+  align-self: flex-start;
+
+  height: 48px;
+  padding: 0 18px;
+
+  background: var(--blue-100);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+
+  font-weight: 700;
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.88);
+
   cursor: pointer;
+
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 12px 26px rgba(0, 0, 0, 0.08);
+
+  transition: transform 140ms ease, box-shadow 140ms ease,
+    border-color 140ms ease;
 }
 
-.dropdown {
-  height: 34px;
-  margin-right: 10px;
-  border: 1px solid #555;
-  border-radius: 4px;
-  padding: 4px;
-  background: white;
-  cursor: pointer;
+.addBtn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 0, 0, 0.14);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.65) inset,
+    0 16px 34px rgba(0, 0, 0, 0.12);
+}
+
+.addBtn:active {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .content {
+    flex-direction: column;
+  }
+  .leftSection,
+  .rightSection {
+    width: 100%;
+  }
+  .imagePlaceholder {
+    width: 100%;
+    max-width: 360px;
+    height: 260px;
+  }
+}
+
+@media (max-width: 520px) {
+  .page {
+    padding: 18px 14px;
+  }
+
+  .exerciseTitle {
+    font-size: 24px;
+  }
+
+  .inputRow {
+    flex-wrap: wrap;
+  }
+
+  .label {
+    flex: 1 1 100%;
+    width: auto;
+  }
+
+  .inputBox {
+    width: 100%;
+  }
 }
