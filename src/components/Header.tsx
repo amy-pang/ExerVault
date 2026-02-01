@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AiOutlineHome, AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineHome } from "react-icons/ai";
 import { ShoppingCart } from "lucide-react";
 import "./Header.css";
 import { supabase } from "../supabaseClient";
@@ -64,13 +64,12 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
         setResults([]);
       } else {
         console.log("Results:", data);
-        setResults((data ?? []) as { id: string; name: string; category: string }[]);
+        setResults((data ?? []) as ExerciseResult[]);
       }
     }, 250);
 
     return () => window.clearTimeout(t);
   }, [query]);
-
 
   return (
     <div className="header-wrapper">
@@ -79,7 +78,6 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
           <AiOutlineHome className="header-icon" color="black" />
         </Link>
 
-        {/* This wrapper anchors the popup underneath the input */}
         <div className="search-wrap" ref={wrapperRef}>
           <div className="search-bar">
             <input
@@ -95,12 +93,9 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
             />
           </div>
 
-          {/* Popup dropdown */}
           {open && (
             <div className="search-popup" role="listbox">
-              {loading ? (
-                <div className="search-popup-row muted">Searching…</div>
-              ) : results.length === 0 ? (
+              {results.length === 0 ? (
                 <div className="search-popup-row muted">No matches</div>
               ) : (
                 results.map((ex) => (
