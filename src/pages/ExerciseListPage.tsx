@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import Header from '../components/Header';
 import ExerciseCard from '../components/ExerciseCard';
@@ -19,9 +19,11 @@ export default function ExerciseListPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('name');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchExercises();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchExercises = async () => {
@@ -70,6 +72,12 @@ export default function ExerciseListPage() {
 
   const handleSortChange = (sort: string) => {
     setSortBy(sort);
+    // You can add sorting logic here later
+  };
+
+  const handleContinueBrowsing = () => {
+    navigate('/');
+    window.scrollTo(0, 0); // Scroll to top of page
   };
 
   const filteredExercises = exercises.filter(ex =>
@@ -109,7 +117,9 @@ export default function ExerciseListPage() {
           )}
 
           <div className="browse-btn-row">
-            <button className="browse-button">Continue Browsing</button>
+            <button className="browse-button" onClick={handleContinueBrowsing}>
+              Continue Browsing
+            </button>
           </div>
         </div>
 

@@ -1,3 +1,6 @@
+// Remove this line if it exists:
+// import Button from './Button';
+
 interface Exercise {
   id: string;
   name: string;
