@@ -112,7 +112,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  height: fit-content;
+  min-height: 450px;
+  max-height: 550px;
 }
 
 .card-image {
@@ -166,6 +167,28 @@
   line-height: 1.6;
   margin-bottom: 16px;
   word-wrap: break-word;
+  overflow-y: auto;
+  max-height: 120px;
+  padding-right: 8px;
+}
+
+/* Scrollbar styling */
+.description::-webkit-scrollbar {
+  width: 6px;
+}
+
+.description::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.description::-webkit-scrollbar-thumb {
+  background: rgba(236, 72, 153, 0.5);
+  border-radius: 3px;
+}
+
+.description::-webkit-scrollbar-thumb:hover {
+  background: rgba(236, 72, 153, 0.7);
 }
 
 .add-button {
