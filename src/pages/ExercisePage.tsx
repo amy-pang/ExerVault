@@ -5,14 +5,16 @@ import { Cart } from '../types/exercise';
 import type { Exercise } from '../types/exercise';
 import "./ExercisePage.css";
 
-export default function ExercisePage() {
+interface ExercisePageProps {
+  cart: Cart;
+}
+
+export default function ExercisePage({ cart }: ExercisePageProps) {
   const { id } = useParams();
   const [exercise, setExercise] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [imageUrl, setImageUrl] = useState("");
   const [imageDimensions, setImageDimensions] = useState({ width: 260, height: 260 });
-  const [cart] = useState(() => new Cart());
-  
   const [frequency, setFrequency] = useState("");
   const [frequencyType, setFrequencyType] = useState("week"); // "week", "day", or "month"
   const [sets, setSets] = useState("");
