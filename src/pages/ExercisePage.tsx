@@ -17,10 +17,10 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
   const [imageUrl, setImageUrl] = useState("");
   const [imageDimensions, setImageDimensions] = useState({ width: 260, height: 260 });
   const [frequency, setFrequency] = useState("");
-  const [frequencyType, setFrequencyType] = useState("week"); // "week", "day", or "month"
+  const [frequencyType, setFrequencyType] = useState("week");
   const [sets, setSets] = useState("");
   const [reps, setReps] = useState("");
-  const [repType, setRepType] = useState("reps"); // "reps" or "seconds"
+  const [repType, setRepType] = useState("reps");
   const [description, setDescription] = useState("");
   const [comments, setComments] = useState("");
   const [isInCart, setIsInCart] = useState(false);
@@ -205,7 +205,6 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
             <span className="inputDesc"># of Sets</span>
           </div>
 
-          {/* UPDATED REPS ROW WITH DROPDOWN */}
           <div className="inputRow">
             <label className="label">{repType === "reps" ? "Reps" : "Seconds"}</label>
 
