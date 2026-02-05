@@ -1,28 +1,31 @@
 import React from "react";
+import './PrintButton.css';
 
-interface ButtonProps {
-  label: string;
+interface PrintButtonProps {
+  label?: string;
   onClick?: () => void;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
 }
 
-const Button: React.FC<ButtonProps> = ({
-  label,
+const PrintButton: React.FC<PrintButtonProps> = ({
+  label = "Print",
   onClick,
   disabled = false,
   type = "button"
 }) => {
   return (
-    <button 
-      className={`custom-button ${disabled ? "disabled" : ""}`}
-      onClick={onClick}
-      type={type}
-      disabled={disabled}
-    >
-      {label}
-    </button>
+    <div className="print-btn-row">
+      <button 
+        className="print-button"
+        onClick={onClick}
+        type={type}
+        disabled={disabled}
+      >
+        {label}
+      </button>
+    </div>
   );
 };
 
-export default Button;
+export default PrintButton;

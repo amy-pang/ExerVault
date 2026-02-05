@@ -1,0 +1,84 @@
+.sidebar-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 280px;
+  padding: 16px;
+}
+
+.print-btn-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.print-button {
+  background: #cfe6ff;
+  color: #1a1a2e;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 48px;
+  font-size: 24px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.print-button:hover {
+  background: #cfe6ff;
+}
+
+.summary-stats-box {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.stats-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #cfe6ff;
+  color: #1a1a2e;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.stats-icon {
+  font-size: 12px;
+}
+
+.stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stats-item {
+  border: 1px solid #f5c5c5;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #e07a7a;
+  background: #fff;
+}
+
+.stats-item.frequency {
+  color: #e07a7a;
+}
+
+.stats-empty {
+  color: #888;
+  font-size: 14px;
+  text-align: center;
+  padding: 20px 16px;
+  line-height: 1.5;
+  background: #f9fafb;
+  border: 2px solid #d1d5db;
+  border-Radius: 12px;
+
+
+}

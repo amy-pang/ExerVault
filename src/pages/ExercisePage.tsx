@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from '../supabaseClient';
 import { Cart } from '../types/exercise';
 import type { Exercise } from '../types/exercise';
@@ -11,15 +11,16 @@ interface ExercisePageProps {
 
 export default function ExercisePage({ cart }: ExercisePageProps) {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [exercise, setExercise] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [imageUrl, setImageUrl] = useState("");
   const [imageDimensions, setImageDimensions] = useState({ width: 260, height: 260 });
   const [frequency, setFrequency] = useState("");
-  const [frequencyType, setFrequencyType] = useState("week"); // "week", "day", or "month"
+  const [frequencyType, setFrequencyType] = useState("week");
   const [sets, setSets] = useState("");
   const [reps, setReps] = useState("");
-  const [repType, setRepType] = useState("reps"); // "reps" or "seconds"
+  const [repType, setRepType] = useState("reps");
   const [description, setDescription] = useState("");
   const [comments, setComments] = useState("");
   const [isInCart, setIsInCart] = useState(false);
@@ -43,8 +44,16 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
 
     cart.addToCart(exerciseToAdd);
     setIsInCart(true);
+    
+    // Show success message
+    alert(`${exercise.name} ${isInCart ? 'updated in' : 'added to'} cart!`);
+    
     console.log(`${exercise.name} added to list!`);
     console.log(cart.getExercises());
+  };
+
+  const handleGoToCart = () => {
+    navigate('/cart');
   };
 
   // Fetch exercise from database
@@ -68,10 +77,20 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
       setExercise(data);
       setDescription(data.description || "");
       
-      // Check if exercise is already in cart
+      // Check if exercise is already in cart and load its data
       const cartExercises = cart.getExercises();
-      const existsInCart = cartExercises.some(ex => ex.id === id);
-      setIsInCart(existsInCart);
+      const existingExercise = cartExercises.find(ex => ex.id === id);
+      
+      if (existingExercise) {
+        setIsInCart(true);
+        // Pre-fill form with existing cart data
+        setFrequency(existingExercise.frequency || "");
+        setFrequencyType(existingExercise.frequencyType || "week");
+        setSets(existingExercise.sets || "");
+        setReps(existingExercise.reps || "");
+        setRepType(existingExercise.repType || "reps");
+        setComments(existingExercise.comments || "");
+      }
       
       // Debug: log the image path
       console.log('Image path from DB:', data.image_path);
@@ -96,17 +115,19 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
     }
     
     fetchExercise();
-  }, [id]);
+  }, [id, cart]);
 
-  // Load saved values on mount
+  // Load saved values on mount (only if not already in cart)
   useEffect(() => {
-    setFrequency(localStorage.getItem("frequency") || "");
-    setFrequencyType(localStorage.getItem("frequencyType") || "week");
-    setSets(localStorage.getItem("sets") || "");
-    setReps(localStorage.getItem("reps") || "");
-    setRepType(localStorage.getItem("repType") || "reps");
-    setComments(localStorage.getItem("comments") || "");
-  }, []);
+    if (!isInCart) {
+      setFrequency(localStorage.getItem("frequency") || "");
+      setFrequencyType(localStorage.getItem("frequencyType") || "week");
+      setSets(localStorage.getItem("sets") || "");
+      setReps(localStorage.getItem("reps") || "");
+      setRepType(localStorage.getItem("repType") || "reps");
+      setComments(localStorage.getItem("comments") || "");
+    }
+  }, [isInCart]);
 
   // Persist values
   useEffect(() => localStorage.setItem("frequency", frequency), [frequency]);
@@ -184,7 +205,6 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
             <span className="inputDesc"># of Sets</span>
           </div>
 
-          {/* UPDATED REPS ROW WITH DROPDOWN */}
           <div className="inputRow">
             <label className="label">{repType === "reps" ? "Reps" : "Seconds"}</label>
 
@@ -222,7 +242,21 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
             onChange={(e) => setComments(e.target.value)}
           />
 
-          <button className="addBtn" onClick={handleAddToList}>{isInCart ? "Update in list" : "Add to list"}</button>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button className="addBtn" onClick={handleAddToList}>
+              {isInCart ? "Update in list" : "Add to list"}
+            </button>
+            
+            {isInCart && (
+              <button 
+                className="addBtn" 
+                onClick={handleGoToCart}
+                style={{ background: '#cfe6ff' }}
+              >
+                Go to Cart
+              </button>
+            )}
+          </div>
         </div>
 
       </div>

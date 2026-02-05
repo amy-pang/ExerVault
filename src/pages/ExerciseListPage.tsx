@@ -1,50 +1,67 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import Header from '../components/Header';
-import ExerciseCard from '../components/ExerciseCard';
+import ExerciseCard from '../components/ExerciseOverview/ExerciseOverview';
 import Sidebar from '../components/Sidebar';
+import { Cart, type Exercise } from '../types/exercise';
 
-interface Exercise {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  image_path: string;
-  image_url?: string;
+interface ExerciseListPageProps {
+  cart: Cart;
 }
 
-export default function ExerciseListPage() {
-  const [exercises, setExercises] = useState<Exercise[]>([]);
+export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
+  const [cartExercises, setCartExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('name');
+  const [searchQuery] = useState('');
   const navigate = useNavigate();
 
+  // Fetch cart exercises on mount and set up interval to check for updates
   useEffect(() => {
-    fetchExercises();
+    fetchCartExercises();
+    
+    // Poll for cart changes every second
+    const interval = setInterval(() => {
+      fetchCartExercises();
+    }, 1000);
+    
+    return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchExercises = async () => {
+  // Fetch exercises from cart and enrich with image URLs
+  const fetchCartExercises = async () => {
     try {
+      const exercises = cart.getExercises();
+      
+      if (exercises.length === 0) {
+        setCartExercises([]);
+        setLoading(false);
+        return;
+      }
+
+      // Fetch full exercise data from Supabase to get images
+      const exerciseIds = exercises.map(ex => ex.id);
       const { data, error } = await supabase
         .from('exercises')
         .select('*')
-        .order('name', { ascending: true });
+        .in('id', exerciseIds);
 
       if (error) throw error;
-      if (!data) return;
+      if (!data) {
+        setCartExercises(exercises);
+        setLoading(false);
+        return;
+      }
 
-      // Map exercises and get public URLs from Supabase Storage
-      const exercisesWithUrls = data.map((exercise: any) => {
-        let imageUrl = '/images/default.png'; // Default fallback
+      // Map exercises with image URLs and cart-specific data
+      const exercisesWithUrls = exercises.map((cartEx) => {
+        const dbExercise = data.find(ex => ex.id === cartEx.id);
+        let imageUrl = '/images/default.png';
         
-        if (exercise.image_path) {
-          // Get public URL from Supabase Storage
+        if (dbExercise?.image_path) {
           const { data: urlData } = supabase.storage
             .from('exercise-images')
-            .getPublicUrl(exercise.image_path);
+            .getPublicUrl(dbExercise.image_path);
           
           if (urlData?.publicUrl) {
             imageUrl = urlData.publicUrl;
@@ -52,35 +69,47 @@ export default function ExerciseListPage() {
         }
         
         return {
-          ...exercise,
-          image_url: imageUrl
+          ...cartEx,
+          image_url: imageUrl,
+          // Preserve cart-specific data
+          frequency: cartEx.frequency,
+          frequencyType: cartEx.frequencyType,
+          sets: cartEx.sets,
+          reps: cartEx.reps,
+          repType: cartEx.repType,
+          comments: cartEx.comments,
+          addedAt: cartEx.addedAt,
         };
       });
 
-      console.log('Fetched exercises with images:', exercisesWithUrls);
-      setExercises(exercisesWithUrls);
+      setCartExercises(exercisesWithUrls);
     } catch (error) {
-      console.error('Error fetching exercises:', error);
+      console.error('Error fetching cart exercises:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSearchChange = (query: string) => {
-    setSearchQuery(query);
+//Creates option to remove from cart
+  const handleRemoveFromCart = (addedAt: number) => {
+    cart.removeFromCart(addedAt);
+    fetchCartExercises(); // Refresh the list immediately
   };
 
-  const handleSortChange = (sort: string) => {
-    setSortBy(sort);
-    // You can add sorting logic here later
+  //Handles clearing all selected exercises from cart
+  const handleClearCart = () => {
+    if (window.confirm('Are you sure you want to clear all exercises from the cart?')) {
+      cart.clearCart();
+      setCartExercises([]);
+    }
   };
 
   const handleContinueBrowsing = () => {
     navigate('/');
-    window.scrollTo(0, 0); // Scroll to top of page
+    window.scrollTo(0, 0);
   };
 
-  const filteredExercises = exercises.filter(ex =>
+  const filteredExercises = cartExercises.filter(ex =>
     ex.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     ex.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
     ex.category.toLowerCase().includes(searchQuery.toLowerCase())
@@ -92,53 +121,122 @@ export default function ExerciseListPage() {
 
   return (
     <div className="phythera-app">
-      {/*<Header 
-        query={searchQuery}
-        onQueryChange={handleSearchChange}
-      />*/}
-
       <div className="main-row">
         <div className="exercise-list-col">
-          <h1 className="page-title">Exercise List</h1>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <h1 className="page-title">Exercise Cart</h1>
+            {cart.getCartCount() > 0 && (
+              <button 
+                onClick={handleClearCart}
+                style={{
+                  padding: '10px 20px',
+                  background: '#ff4444',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  transition: 'background 0.2s'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.background = '#cc0000'}
+                onMouseOut={(e) => e.currentTarget.style.background = '#ff4444'}
+              >
+                Clear Cart
+              </button>
+            )}
+          </div>
           
           {filteredExercises.length === 0 ? (
-            <p>No exercises found.</p>
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '80px 20px',
+              background: '#f9fafb',
+              borderRadius: '12px',
+              border: '2px dashed #d1d5db'
+            }}>
+              <div style={{ fontSize: '48px', marginBottom: '16px', opacity: 0.3 }}>🛒</div>
+              <p style={{ fontSize: '1.3em', color: '#333', marginBottom: '12px', fontWeight: '600' }}>
+                Your cart is empty
+              </p>
+              <p style={{ fontSize: '1em', color: '#666', marginBottom: '30px' }}>
+                Browse exercises and add them to create a prescription for your patient.
+              </p>
+              <button 
+                className="browse-button" 
+                onClick={handleContinueBrowsing}
+                style={{
+                  padding: '14px 60px',
+                  fontSize: '16px'
+                }}
+              >
+                Browse Exercises
+              </button>
+            </div>
           ) : (
-            filteredExercises.map((ex) => (
-              <ExerciseCard
-                key={ex.id}
-                id={ex.id}
-                name={ex.name}
-                description={ex.description}
-                category={ex.category}
-                imageUrl={ex.image_url || '/images/default.png'}
-              />
-            ))
-          )}
+            <>
+              {filteredExercises.map((ex) => (
+                <div key={ex.addedAt} style={{ position: 'relative', marginBottom: '16px' }}>
+                  <ExerciseCard
+                    id={ex.id}
+                    name={ex.name}
+                    description={ex.description}
+                    category={ex.category}
+                    imageUrl={ex.image_url || '/images/default.png'}
+                    frequency={ex.frequency}
+                    frequencyType={ex.frequencyType}
+                    sets={ex.sets}
+                    reps={ex.reps}
+                    repType={ex.repType}
+                    comments={ex.comments}
+                  />
+                  <button
+                    onClick={() => handleRemoveFromCart(ex.addedAt!)}
+                    style={{
+                      position: 'absolute',
+                      top: '16px',
+                      right: '16px',
+                      background: '#ff4444',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '36px',
+                      height: '36px',
+                      cursor: 'pointer',
+                      fontSize: '20px',
+                      fontWeight: 'bold',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'all 0.2s',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                      zIndex: 10
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.background = '#cc0000';
+                      e.currentTarget.style.transform = 'scale(1.1)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.background = '#ff4444';
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                    title="Remove from cart"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
 
-          <div className="browse-btn-row">
-            <button className="browse-button" onClick={handleContinueBrowsing}>
-              Continue Browsing
-            </button>
-          </div>
+              <div className="browse-btn-row">
+                <button className="browse-button" onClick={handleContinueBrowsing}>
+                  Continue Browsing
+                </button>
+              </div>
+            </>
+          )}
         </div>
 
         <Sidebar exercises={filteredExercises} />
       </div>
-
-      {/* Hidden Admin Link - for development */}
-      <Link to="/admin" style={{ position: 'fixed', bottom: 20, right: 20, opacity: 0.3 }}>
-        <button style={{ 
-          padding: '10px 20px', 
-          background: '#333', 
-          color: '#fff', 
-          border: 'none', 
-          borderRadius: '8px', 
-          cursor: 'pointer' 
-        }}>
-          Admin
-        </button>
-      </Link>
     </div>
   );
 }

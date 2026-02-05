@@ -3,7 +3,6 @@ import { AiOutlineHome } from "react-icons/ai";
 import { ShoppingCart } from "lucide-react";
 import "./Header.css";
 import { supabase } from "../supabaseClient";
-import ExercisePage from "../pages/ExercisePage";
 import { Link } from "react-router-dom";
 
 type HeaderProps = {
@@ -18,12 +17,9 @@ type ExerciseResult = {
   category: string | null;
 };
 
-export default function Header({ query, onQueryChange, onPickExercise }: HeaderProps) {
+export default function Header({ query, onQueryChange, }: HeaderProps) {
   const [results, setResults] = useState<ExerciseResult[]>([]);
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [exerciseOpen, setExerciseOpen] = useState(false);
-  const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(null);
 
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
