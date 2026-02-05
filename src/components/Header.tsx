@@ -120,7 +120,7 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
           )}
         </div>
 
-        <Link to="/cart" className="header-home-link">
+        <Link to="/exercise-list" className="header-home-link">
           <ShoppingCart className="header-icon" color="black" />
         </Link>
       </header>

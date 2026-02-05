@@ -21,8 +21,11 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/cart" element={<ExerciseListPage />} />
+        <Route path="/exercise-list" element={<ExerciseListPage />} />  {/* exercises added to print */}
         <Route path="/exercise/:id" element={<ExercisePage cart={cart} />} />
+        {/* <Route path="/print" element={< />} /> */}
+
+        {/* TODO: DELETE THESE ROUTES*/}
         <Route path="/exercise-overview" element={<ExerciseOverview />} />
         <Route path="/admin" element={<AdminPanel />} />
       </Routes>
