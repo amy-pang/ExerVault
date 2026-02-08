@@ -5,20 +5,22 @@ import { Cart } from '../types/exercise';
 import type { Exercise } from '../types/exercise';
 import "./ExercisePage.css";
 
-export default function ExercisePage() {
+interface ExercisePageProps {
+  cart: Cart;
+}
+
+export default function ExercisePage({ cart }: ExercisePageProps) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [exercise, setExercise] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
   const [imageUrl, setImageUrl] = useState("");
   const [imageDimensions, setImageDimensions] = useState({ width: 260, height: 260 });
-
   const [frequency, setFrequency] = useState("");
-  const [frequencyType, setFrequencyType] = useState("week");
+  const [frequencyType, setFrequencyType] = useState("week"); // "week", "day", or "month"
   const [sets, setSets] = useState("");
   const [reps, setReps] = useState("");
-  const [repType, setRepType] = useState("reps");
+  const [repType, setRepType] = useState("reps"); // "reps" or "seconds"
   const [description, setDescription] = useState("");
   const [comments, setComments] = useState("");
   const [isInCart, setIsInCart] = useState(false);
@@ -58,19 +60,20 @@ export default function ExercisePage() {
   useEffect(() => {
     async function fetchExercise() {
       if (!id) return;
-
+      console.log(import.meta.env.VITE_SUPABASE_URL);
       const { data, error } = await supabase
-        .from("exercises")
-        .select("*")
-        .eq("id", id)
+        .from('exercises')
+        .select('*')
+        .eq('id', id)
         .single();
-
+      
       if (error) {
-        console.error("Error fetching exercise:", error);
+        console.error('Error fetching exercise:', error);
+        console.log('Looking for ID:', id);
         setLoading(false);
         return;
       }
-
+      
       setExercise(data);
       setDescription(data.description || "");
       
@@ -110,7 +113,7 @@ export default function ExercisePage() {
       
       setLoading(false);
     }
-
+    
     fetchExercise();
   }, [id, cart]);
 
@@ -137,35 +140,37 @@ export default function ExercisePage() {
 
   return (
     <div className="page">
+      
       <h1 className="exerciseTitle">
-        {loading ? "Loading..." : exercise?.name}
-        <span className="category">{exercise?.category}</span>
+        {loading ? "Loading..." : exercise?.name || "Exercise Name"} 
+        <span className="category">{exercise?.category || "Category"}</span>
       </h1>
 
       <div className="content">
+
         <div className="leftSection">
-          <div
-            className="imagePlaceholder"
-            style={{ width: imageDimensions.width, height: imageDimensions.height }}
-          >
+
+          <div className="imagePlaceholder" style={{ width: imageDimensions.width, height: imageDimensions.height }}>
             {imageUrl && (
-              <img
-                src={imageUrl}
+              <img 
+                src={imageUrl} 
                 alt={exercise?.name}
                 onLoad={(e) => {
                   const img = e.currentTarget;
-                  const max = 260;
+                  const maxSize = 260;
                   const ratio = img.naturalWidth / img.naturalHeight;
-
-                  let width = max;
-                  let height = max;
-
-                  if (ratio > 1) height = max / ratio;
-                  else width = max * ratio;
-
+                  let width = maxSize;
+                  let height = maxSize;
+                  
+                  if (ratio > 1) {
+                    height = maxSize / ratio;
+                  } else {
+                    width = maxSize * ratio;
+                  }
+                  
                   setImageDimensions({ width, height });
                 }}
-                style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
               />
             )}
           </div>
@@ -183,9 +188,9 @@ export default function ExercisePage() {
               value={frequencyType}
               onChange={(e) => setFrequencyType(e.target.value)}
             >
-              <option value="day">Times / Day</option>
-              <option value="week">Times / Week</option>
-              <option value="month">Times / Month</option>
+              <option value="day">Times/Day</option>
+              <option value="week">Times/Week</option>
+              <option value="month">Times/Month</option>
             </select>
           </div>
 
@@ -197,16 +202,20 @@ export default function ExercisePage() {
               value={sets}
               onChange={(e) => setSets(e.target.value)}
             />
+            <span className="inputDesc"># of Sets</span>
           </div>
 
+          {/* UPDATED REPS ROW WITH DROPDOWN */}
           <div className="inputRow">
             <label className="label">{repType === "reps" ? "Reps" : "Seconds"}</label>
+
             <input
               type="number"
               className="inputBox"
               value={reps}
               onChange={(e) => setReps(e.target.value)}
             />
+
             <select
               className="dropdown"
               value={repType}
@@ -216,19 +225,20 @@ export default function ExercisePage() {
               <option value="seconds">Seconds</option>
             </select>
           </div>
+
         </div>
 
         <div className="rightSection">
           <textarea
             className="description"
-            placeholder="Description of exercise"
+            placeholder="Description of Exercise"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
 
           <textarea
             className="comments"
-            placeholder="Additional comments..."
+            placeholder="Additional Comments..."
             value={comments}
             onChange={(e) => setComments(e.target.value)}
           />
@@ -249,6 +259,7 @@ export default function ExercisePage() {
             )}
           </div>
         </div>
+
       </div>
     </div>
   );
