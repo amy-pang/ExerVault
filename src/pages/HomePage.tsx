@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './HomePage.css';
 import { Plus } from 'lucide-react';
 import { supabase } from '../supabaseClient';
+import Filter from "../components/Filter";
+
 
 interface Exercise {
   id: string;
@@ -40,7 +42,14 @@ export default function HomePage() {
   return (
     <div className="home-page">
       {/* Welcome */}
-      <h1 className="welcome">Welcome Back!</h1>
+      <div className="pageHeaderWrapper">
+        <div className="pageHeader">
+          <h1 className="welcomeText">Welcome Back!</h1>
+          <Filter />
+        </div>
+      </div>
+
+
 
       {/* Exercise Cards */}
       <div className="exercise-grid">

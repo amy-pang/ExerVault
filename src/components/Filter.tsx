@@ -30,7 +30,16 @@ export default function Filter() {
      }
 
 
-     const uniqueCategories = Array.from(new Set(data.map((row: any) => row.category)))
+    const uniqueCategories = Array.from(
+    new Set(
+        data
+        .map((row: any) => row.category)
+        .filter(
+            (category: string | null) =>
+            category !== null && category.trim() !== ""
+        )
+    )
+    )
      setCategories(uniqueCategories)
      setError(null)
    } catch (err: any) {
@@ -39,33 +48,63 @@ export default function Filter() {
    }
  }
 
+return (
+  <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+    <div style={{ position: 'relative', display: 'inline-block' }}>
+      
+      {/* Button (does NOT move) */}
+      <button
+        onClick={handleToggleCategories}
+        style={{
+          padding: '0.5rem 1rem',
+          backgroundColor: '#000',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '8px',
+          cursor: 'pointer'
+        }}
+      >
+        {categories ? 'Hide Filters' : 'Filter'}
+      </button>
 
- return (
-   <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-     {/* Container to prevent button movement */}
-     <div style={{ display: 'flex', flexDirection: 'column', rowGap: '1rem', minHeight: '120px' }}>
-       <button onClick={handleToggleCategories} style={{ padding: '0.5rem 1rem', alignSelf: 'flex-start' }}>
-         {categories ? '...' : '...'}
-       </button>
+      {/* Dropdown (appears left, button stays fixed) */}
+      {categories && categories.length > 0 && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '100%',
+            right: '0',        // 👈 anchor to button's right edge
+            marginTop: '0.75rem',
+            display: 'flex',
+            gap: '1rem',
+            flexWrap: 'wrap',
+            padding: '1rem',
+            backgroundColor: '#fff',
+            color: '#000',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            borderRadius: '8px',
+            zIndex: 10,
+            minWidth: '240px'
+          }}
+        >
+          {categories.map((category) => (
+            <label
+              key={category}
+              style={{ display: 'flex', alignItems: 'center' }}
+            >
+              <input type="checkbox" />
+              <span style={{ marginLeft: '0.3rem' }}>{category}</span>
+            </label>
+          ))}
+        </div>
+      )}
 
-
-       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-
-
-       {categories && categories.length > 0 && (
-         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-           {categories.map((category) => (
-             <label key={category} style={{ display: 'flex', alignItems: 'center' }}>
-               <input type="checkbox" />
-               <span style={{ marginLeft: '0.3rem' }}>{category}</span>
-             </label>
-           ))}
-         </div>
-       )}
-     </div>
-   </div>
- )
+      {error && (
+        <p style={{ color: 'red', marginTop: '0.5rem' }}>
+          Error: {error}
+        </p>
+      )}
+    </div>
+  </div>
+)
 }
-
-
-
