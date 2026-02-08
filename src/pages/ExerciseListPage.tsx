@@ -91,10 +91,10 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
   };
 
 //Creates option to remove from cart
-  const handleRemoveFromCart = (addedAt: number) => {
-    cart.removeFromCart(addedAt);
-    fetchCartExercises(); // Refresh the list immediately
-  };
+const handleRemoveFromCart = (id: string) => {
+    cart.removeFromCart(id);
+    fetchCartExercises();
+};
 
   //Handles clearing all selected exercises from cart
   const handleClearCart = () => {
@@ -190,7 +190,7 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
                     comments={ex.comments}
                   />
                   <button
-                    onClick={() => handleRemoveFromCart(ex.addedAt!)}
+                    onClick={() => handleRemoveFromCart(ex.id)}
                     style={{
                       position: 'absolute',
                       top: '16px',
