@@ -28,18 +28,25 @@ export default function Filter() {
        setCategories([])
        return
      }
+    
+     console.log(
+      data.map((row: any) => ({
+        raw: JSON.stringify(row.category),
+        trimmed: JSON.stringify(row.category?.trim())
+      }))
+    )
 
 
     const uniqueCategories = Array.from(
-    new Set(
+      new Set(
         data
-        .map((row: any) => row.category)
-        .filter(
-            (category: string | null) =>
-            category !== null && category.trim() !== ""
-        )
+          .map((row: any) => row.category?.trim())
+          .filter((category: string | undefined): category is string =>
+            !!category && category !== ""
+          )
+      )
     )
-    )
+
      setCategories(uniqueCategories)
      setError(null)
    } catch (err: any) {
