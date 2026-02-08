@@ -207,3 +207,22 @@
     width: 100%;
   }
 }
+
+.pageHeaderWrapper {
+  width: 100%;
+}
+
+.pageHeader {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.welcomeText {
+  margin: 0;
+}
+
+.welcomeText {
+  color: #000;        /* black */
+}
