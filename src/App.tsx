@@ -22,10 +22,6 @@ function App() {
         <Route path="/exercise-list" element={<ExerciseListPage cart={cart} />} />  {/* exercises added to print */}
         <Route path="/exercise/:id" element={<ExercisePage cart={cart} />} />
         {/* <Route path="/print" element={< />} /> */}
-
-        {/* TODO: DELETE THESE ROUTES*/}
-        <Route path="/exercise-overview" element={<ExerciseOverview />} />
-        <Route path="/admin" element={<AdminPanel />} />
       </Routes>
     </BrowserRouter>
   );
