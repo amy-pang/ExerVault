@@ -5,12 +5,17 @@ import ExerciseCard from '../components/ExerciseOverview/ExerciseOverview';
 import Sidebar from '../components/Sidebar';
 import { Cart, type Exercise } from '../types/exercise';
 
+// Extended type to include image_url which we add after fetching
+interface CartExerciseWithImage extends Exercise {
+  image_url?: string;
+}
+
 interface ExerciseListPageProps {
   cart: Cart;
 }
 
 export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
-  const [cartExercises, setCartExercises] = useState<Exercise[]>([]);
+  const [cartExercises, setCartExercises] = useState<CartExerciseWithImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery] = useState('');
   const navigate = useNavigate();
@@ -54,7 +59,7 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
       }
 
       // Map exercises with image URLs and cart-specific data
-      const exercisesWithUrls = exercises.map((cartEx) => {
+      const exercisesWithUrls: CartExerciseWithImage[] = exercises.map((cartEx) => {
         const dbExercise = data.find(ex => ex.id === cartEx.id);
         let imageUrl = '/images/default.png';
         
@@ -138,8 +143,8 @@ const handleRemoveFromCart = (id: string) => {
                   fontWeight: '600',
                   transition: 'background 0.2s'
                 }}
-                onMouseOver={(e) => e.currentTarget.style.background = '#cc0000'}
-                onMouseOut={(e) => e.currentTarget.style.background = '#ff4444'}
+                onMouseOver={(e: React.MouseEvent<HTMLButtonElement>) => e.currentTarget.style.background = '#cc0000'}
+                onMouseOut={(e: React.MouseEvent<HTMLButtonElement>) => e.currentTarget.style.background = '#ff4444'}
               >
                 Clear Cart
               </button>
@@ -181,7 +186,7 @@ const handleRemoveFromCart = (id: string) => {
                     name={ex.name}
                     description={ex.description}
                     category={ex.category}
-                    imageUrl={ex.image_url || '/images/default.png'}
+                    imageUrl={ex.image_url ?? '/images/default.png'}
                     frequency={ex.frequency}
                     frequencyType={ex.frequencyType}
                     sets={ex.sets}
@@ -211,11 +216,11 @@ const handleRemoveFromCart = (id: string) => {
                       boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
                       zIndex: 10
                     }}
-                    onMouseOver={(e) => {
+                    onMouseOver={(e: React.MouseEvent<HTMLButtonElement>) => {
                       e.currentTarget.style.background = '#cc0000';
                       e.currentTarget.style.transform = 'scale(1.1)';
                     }}
-                    onMouseOut={(e) => {
+                    onMouseOut={(e: React.MouseEvent<HTMLButtonElement>) => {
                       e.currentTarget.style.background = '#ff4444';
                       e.currentTarget.style.transform = 'scale(1)';
                     }}
