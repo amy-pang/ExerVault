@@ -28,14 +28,6 @@ export default function Filter() {
        setCategories([])
        return
      }
-    
-     console.log(
-      data.map((row: any) => ({
-        raw: JSON.stringify(row.category),
-        trimmed: JSON.stringify(row.category?.trim())
-      }))
-    )
-
 
     const uniqueCategories = Array.from(
       new Set(
