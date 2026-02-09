@@ -4,9 +4,6 @@ import { Plus } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import Filter from "../components/Filter";
 
-
-
-
 interface Exercise {
  id: string;
  name: string;
@@ -30,11 +27,6 @@ const filteredExercises =
          exercise.category?.trim().toLowerCase()
        )
      );
-
-
-
-
-
 
  // Fetch exercises from Supabase when component loads
  useEffect(() => {
@@ -69,18 +61,11 @@ const filteredExercises =
        <div className="pageHeader">
          <h1 className="welcomeText">Welcome Back!</h1>
          <Filter
- selectedCategories={selectedCategories}
- onChange={setSelectedCategories}
-/>
-
-
+          selectedCategories={selectedCategories}
+          onChange={setSelectedCategories}
+          />
        </div>
      </div>
-
-
-
-
-
 
      {/* Exercise Cards */}
      <div className="exercise-grid">
@@ -100,7 +85,7 @@ const filteredExercises =
            <p className="equipment"><strong>Category:</strong> {exercise.category}</p>
            <p className="description">{exercise.description}</p>
            <button className="add-button">
-             <Plus size={24} />
+             <Plus size={24}/>
            </button>
          </div>
        ))}

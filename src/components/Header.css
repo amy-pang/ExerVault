@@ -13,14 +13,14 @@
 /* ---------- Container ---------- */
 .header-container {
   width: 100%;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 14px 28px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
+  gap: 24px;
 
   box-sizing: border-box;
 }
@@ -53,7 +53,10 @@
 .header-icon {
   font-size: 22px;
   cursor: pointer;
+  color: #111827;            /* match cart-icon tone */
+  stroke-width: 1.5;
 }
+
 
 /* ---------- Search layout ---------- */
 /* Anchors popup. Also controls overall width cleanly. */
@@ -61,22 +64,20 @@
   position: relative;
   flex: 1;
   min-width: 260px;
-  max-width: 840px;
-}
+  max-width: 680px;
 
 /* Search “pill” with depth */
 .search-bar {
   display: flex;
   align-items: center;
 
-  background: var(--blue-100);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: var(--radius-pill);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
 
-  padding: 10px 14px;
+  padding: 12px 18px;
   min-width: 0;
 
-  /* modern depth */
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset,
     0 10px 22px rgba(0, 0, 0, 0.06);
 
@@ -86,14 +87,13 @@
 
 /* Lift on hover */
 .search-wrap:hover .search-bar {
-  border-color: rgba(0, 0, 0, 0.10);
+  border-color: rgba(0, 0, 0, 0.12);
   transform: translateY(-1px);
 }
 
 /* When focusing inside, add a clean focus ring */
 .search-bar:focus-within {
   outline: none;
-  border-color: rgba(59, 130, 246, 0.35);
   transform: translateY(-1px);
 }
 
@@ -103,12 +103,16 @@
   border: none;
   background: transparent;
 
-  font-size: 0.98rem;
+  font-size: 0.95rem;
   line-height: 1.1;
   padding: 6px 8px;
 
   outline: none;
-  color: var(--text);
+  color: #111827;            /* homepage text */
+}
+
+.search-input::placeholder {
+  color: #9ca3af;            /* homepage placeholder */
 }
 
 .search-input:focus {

@@ -1,67 +1,22 @@
 .home-page {
   min-height: 100vh;
-  background-color: #ffffff;
+  background-color: #f8fafc;
   padding: 24px;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 32px;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.search-container {
-  flex: 1;
-  position: relative;
-  max-width: 600px;
-}
-
-.search-bar {
-  width: 100%;
-  padding: 16px 24px;
-  background-color: #bfdbfe;
-  border-radius: 50px;
-  border: none;
-  outline: none;
-  font-size: 16px;
-  color: #6b7280;
-}
-
-.search-bar::placeholder {
-  color: #9ca3af;
-}
-
-.search-icon {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #ffffff;
-}
-
-.cart-icon {
-  cursor: pointer;
-  color: #000000;
-  stroke-width: 1.5;
-  margin-left: auto;
-}
-
+/* Welcome */
 .welcome {
-  font-size: 48px;
-  font-weight: bold;
+  font-size: 40px;
+  font-weight: 600;
   margin-bottom: 40px;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
-  color: #000000;
+  color: #111827;
   text-align: left;
 }
 
+/* Featured */
 .featured-section {
   display: flex;
   gap: 24px;
@@ -74,8 +29,8 @@
 .featured-large {
   flex: 1;
   height: 200px;
-  background-color: #bfdbfe;
-  border-radius: 8px;
+  background-color: #e8f0ff;
+  border-radius: 12px;
   position: relative;
   display: flex;
   align-items: flex-start;
@@ -83,18 +38,19 @@
 }
 
 .sort-by {
-  color: #ffffff;
+  color: #2563eb;
   font-size: 14px;
 }
 
 .featured-small {
   width: 200px;
   height: 200px;
-  border: 2px solid #000000;
-  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
   background-color: #ffffff;
 }
 
+/* Grid */
 .exercise-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -104,24 +60,32 @@
   margin-right: auto;
 }
 
+/* Cards */
 .exercise-card {
-  background-color: #bfdbfe;
-  border-radius: 8px;
-  padding: 24px;
-  padding-bottom: 80px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  padding-bottom: 72px;
   position: relative;
   display: flex;
   flex-direction: column;
   height: fit-content;
+  border: 1px solid #e5e7eb;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
+.exercise-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+/* Image */
 .card-image {
   width: 100%;
   aspect-ratio: 4/3;
-  border: 2px solid #000000;
-  border-radius: 4px;
+  border-radius: 8px;
   margin-bottom: 16px;
-  background-color: #f3f4f6;
+  background-color: #f1f5f9;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -136,22 +100,23 @@
 }
 
 .placeholder-text {
-  color: #999;
+  color: #9ca3af;
   font-size: 14px;
 }
 
+/* Text */
 .exercise-card h3 {
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 18px;
-  margin-bottom: 8px;
+  color: #111827;
+  font-weight: 600;
+  font-size: 17px;
+  margin-bottom: 6px;
   text-align: left;
 }
 
 .equipment {
-  color: #ec4899;
-  font-size: 14px;
-  margin-bottom: 4px;
+  color: #2563eb;
+  font-size: 13px;
+  margin-bottom: 6px;
   text-align: left;
 }
 
@@ -160,34 +125,42 @@
 }
 
 .description {
-  color: #ec4899;
+  color: #6b7280;
   font-size: 14px;
   text-align: left;
-  line-height: 1.6;
+  line-height: 1.5;
   margin-bottom: 16px;
   word-wrap: break-word;
 }
 
+/* Add button */
 .add-button {
   position: absolute;
-  bottom: 24px;
-  right: 24px;
-  background-color: #000000;
+  bottom: 20px;
+  right: 20px;
+  background-color: #2563eb;
   border: none;
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .add-button:hover {
-  background-color: #333333;
+  background-color: #1d4ed8;
+  transform: scale(1.05);
 }
 
+.add-button svg {
+  stroke: #ffffff;
+}
+
+/* Responsive */
 @media (max-width: 1024px) {
   .exercise-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -208,6 +181,7 @@
   }
 }
 
+/* Page header */
 .pageHeaderWrapper {
   width: 100%;
 }
@@ -221,8 +195,5 @@
 
 .welcomeText {
   margin: 0;
-}
-
-.welcomeText {
-  color: #000;        /* black */
+  color: #111827;
 }
