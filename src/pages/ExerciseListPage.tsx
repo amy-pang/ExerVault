@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
-import ExerciseOverview from "../components/ExerciseOverview/ExerciseOverview";
+import ExerciseOverview from "../components/Cards/ExerciseListCard";
 import Sidebar from "../components/Sidebar";
 import { Cart, type Exercise } from "../types/exercise";
 import styles from "./ExerciseListPage.module.css";

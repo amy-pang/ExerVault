@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import type { Exercise } from "../../types/exercise";
 import { supabase } from "../../supabaseClient";
 import ExerciseCard from "./ExerciseCard";
-import styles from "./ExerciseOverview.module.css";
+import styles from "./ExerciseListCard.module.css";
 
 const BUCKET = "exercise-images";
 
