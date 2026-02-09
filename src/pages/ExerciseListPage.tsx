@@ -131,7 +131,7 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
               marginBottom: "24px",
             }}
           >
-            <h1 className={styles.pageTitle}>Exercise Cart</h1>
+            <h1 className={styles.pageTitle}>Exercise List</h1>
 
             {cart.getCartCount() > 0 && (
               <button
@@ -149,7 +149,7 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
                 onMouseOver={(e) => (e.currentTarget.style.background = "#cc0000")}
                 onMouseOut={(e) => (e.currentTarget.style.background = "#ff4444")}
               >
-                Clear Cart
+                Clear List
               </button>
             )}
           </div>
@@ -166,7 +166,7 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
             >
               <div style={{ fontSize: "48px", marginBottom: "16px", opacity: 0.3 }}>🛒</div>
               <p style={{ fontSize: "1.3em", color: "#333", marginBottom: "12px", fontWeight: "600" }}>
-                Your cart is empty
+                Your list is empty
               </p>
               <p style={{ fontSize: "1em", color: "#666", marginBottom: "30px" }}>
                 Browse exercises and add them to create a prescription for your patient.
@@ -201,7 +201,7 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
 
                   <button
                     onClick={() => handleRemoveFromCart(ex.id)}
-                    title="Remove from cart"
+                    title="Remove from list"
                     style={{
                       position: "absolute",
                       top: "16px",
