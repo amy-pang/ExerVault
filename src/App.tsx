@@ -5,7 +5,7 @@ import ExerciseListPage from './pages/ExerciseListPage';
 import AdminPanel from './components/AdminPanel';
 import HomePage from './pages/HomePage'
 import Header from './components/Header';
-import ExercisePage from './pages/ExercisePage';
+import ExercisePage from './pages/SingleExercisePage';
 import ExerciseOverview from './components/ExerciseOverview/ExerciseOverview'
 import { Cart } from './types/exercise';
 

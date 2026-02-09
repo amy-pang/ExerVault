@@ -3,7 +3,7 @@ import { AiOutlineHome, AiOutlineSearch } from "react-icons/ai";
 import { ShoppingCart } from "lucide-react";
 import "./Header.css";
 import { supabase } from "../supabaseClient";
-import ExercisePage from "../pages/ExercisePage";
+import ExercisePage from "../pages/SingleExercisePage";
 import { Link } from "react-router-dom";
 
 type HeaderProps = {

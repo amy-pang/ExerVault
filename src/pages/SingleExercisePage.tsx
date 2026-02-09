@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from '../supabaseClient';
 import { Cart } from '../types/exercise';
 import type { Exercise } from '../types/exercise';
-import "./ExercisePage.css";
+import styles from "./SingleExercisePage.module.css";
 
 interface ExercisePageProps {
   cart: Cart;
@@ -118,21 +118,21 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
   useEffect(() => localStorage.setItem("comments", comments), [comments]);
 
   return (
-    <div className="page">
-      
-      <h1 className="exerciseTitle">
-        {loading ? "Loading..." : exercise?.name || "Exercise Name"} 
-        <span className="category">{exercise?.category || "Category"}</span>
+    <div className={styles.page}>
+      <h1 className={styles.exerciseTitle}>
+        {loading ? "Loading..." : exercise?.name || "Exercise Name"}
+        <span className={styles.category}>{exercise?.category || "Category"}</span>
       </h1>
 
-      <div className="content">
-
-        <div className="leftSection">
-
-          <div className="imagePlaceholder" style={{ width: imageDimensions.width, height: imageDimensions.height }}>
+      <div className={styles.content}>
+        <div className={styles.leftSection}>
+          <div
+            className={styles.imagePlaceholder}
+            style={{ width: imageDimensions.width, height: imageDimensions.height }}
+          >
             {imageUrl && (
-              <img 
-                src={imageUrl} 
+              <img
+                src={imageUrl}
                 alt={exercise?.name}
                 onLoad={(e) => {
                   const img = e.currentTarget;
@@ -140,30 +140,27 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
                   const ratio = img.naturalWidth / img.naturalHeight;
                   let width = maxSize;
                   let height = maxSize;
-                  
-                  if (ratio > 1) {
-                    height = maxSize / ratio;
-                  } else {
-                    width = maxSize * ratio;
-                  }
-                  
+
+                  if (ratio > 1) height = maxSize / ratio;
+                  else width = maxSize * ratio;
+
                   setImageDimensions({ width, height });
                 }}
-                style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
               />
             )}
           </div>
 
-          <div className="inputRow">
-            <label className="label">Frequency</label>
+          <div className={styles.inputRow}>
+            <label className={styles.label}>Frequency</label>
             <input
               type="number"
-              className="inputBox"
+              className={styles.inputBox}
               value={frequency}
               onChange={(e) => setFrequency(e.target.value)}
             />
             <select
-              className="dropdown"
+              className={styles.dropdown}
               value={frequencyType}
               onChange={(e) => setFrequencyType(e.target.value)}
             >
@@ -173,30 +170,27 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
             </select>
           </div>
 
-          <div className="inputRow">
-            <label className="label">Sets</label>
+          <div className={styles.inputRow}>
+            <label className={styles.label}>Sets</label>
             <input
               type="number"
-              className="inputBox"
+              className={styles.inputBox}
               value={sets}
               onChange={(e) => setSets(e.target.value)}
             />
-            <span className="inputDesc"># of Sets</span>
+            <span className={styles.inputDesc}># of Sets</span>
           </div>
 
-          {/* UPDATED REPS ROW WITH DROPDOWN */}
-          <div className="inputRow">
-            <label className="label">{repType === "reps" ? "Reps" : "Seconds"}</label>
-
+          <div className={styles.inputRow}>
+            <label className={styles.label}>{repType === "reps" ? "Reps" : "Seconds"}</label>
             <input
               type="number"
-              className="inputBox"
+              className={styles.inputBox}
               value={reps}
               onChange={(e) => setReps(e.target.value)}
             />
-
             <select
-              className="dropdown"
+              className={styles.dropdown}
               value={repType}
               onChange={(e) => setRepType(e.target.value)}
             >
@@ -204,27 +198,27 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
               <option value="seconds">Seconds</option>
             </select>
           </div>
-
         </div>
 
-        <div className="rightSection">
+        <div className={styles.rightSection}>
           <textarea
-            className="description"
+            className={styles.description}
             placeholder="Description of Exercise"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
 
           <textarea
-            className="comments"
+            className={styles.comments}
             placeholder="Additional Comments..."
             value={comments}
             onChange={(e) => setComments(e.target.value)}
           />
 
-          <button className="addBtn" onClick={handleAddToList}>{isInCart ? "Update in list" : "Add to list"}</button>
+          <button className={styles.addBtn} onClick={handleAddToList}>
+            {isInCart ? "Update in list" : "Add to list"}
+          </button>
         </div>
-
       </div>
     </div>
   );
