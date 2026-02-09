@@ -1,20 +1,20 @@
-.exercise-overview-page {
+.exerciseOverviewPage {
   width: 100%;
   padding: 24px 28px;
   box-sizing: border-box;
 }
 
-.exercise-loading {
+.exerciseLoading {
   font-size: 16px;
   opacity: 0.8;
 }
 
-.exercise-error {
+.exerciseError {
   color: crimson;
   margin-bottom: 12px;
 }
 
-.exercise-overview-grid {
+.exerciseOverviewGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(320px, 1fr));
   gap: 22px;
@@ -22,13 +22,13 @@
 }
 
 @media (max-width: 1100px) {
-  .exercise-overview-grid {
+  .exerciseOverviewGrid {
     grid-template-columns: repeat(2, minmax(320px, 1fr));
   }
 }
 
 @media (max-width: 720px) {
-  .exercise-overview-grid {
+  .exerciseOverviewGrid {
     grid-template-columns: 1fr;
   }
   

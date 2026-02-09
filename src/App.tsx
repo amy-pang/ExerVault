@@ -2,11 +2,9 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import ExerciseListPage from './pages/ExerciseListPage';
-import AdminPanel from './components/AdminPanel';
 import HomePage from './pages/HomePage'
 import Header from './components/Header';
 import ExercisePage from './pages/SingleExercisePage';
-import ExerciseOverview from './components/ExerciseOverview/ExerciseOverview'
 import { Cart } from './types/exercise';
 
 function App() {
@@ -21,13 +19,9 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/exercise-list" element={<ExerciseListPage />} />  {/* exercises added to print */}
+        <Route path="/exercise-list" element={<ExerciseListPage cart={cart}/>} />  {/* exercises added to print */}
         <Route path="/exercise/:id" element={<ExercisePage cart={cart} />} />
         {/* <Route path="/print" element={< />} /> */}
-
-        {/* TODO: DELETE THESE ROUTES*/}
-        <Route path="/exercise-overview" element={<ExerciseOverview />} />
-        <Route path="/admin" element={<AdminPanel />} />
       </Routes>
     </BrowserRouter>
   );

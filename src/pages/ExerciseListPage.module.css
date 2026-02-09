@@ -1,0 +1,71 @@
+/* Page wrapper */
+.phytheraApp {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+/* Main layout */
+.mainRow {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* Left column */
+.exerciseListCol {
+  flex: 1;
+}
+
+/* Title */
+.pageTitle {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Loading */
+.loadingScreen {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 18px;
+}
+
+/* Browse row + button */
+.browseBtnRow {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.browseButton {
+  padding: 14px 36px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.browseButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .mainRow {
+    flex-direction: column;
+  }
+}
