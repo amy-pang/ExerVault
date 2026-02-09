@@ -15,7 +15,6 @@ interface ExerciseData {
   image_path: string;
 }
 
-
 export default function HomePage() {
   const [exercises, setExercises] = useState<ExerciseData[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
