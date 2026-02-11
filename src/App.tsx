@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage'
 import Header from './components/Header';
 import ExercisePage from './pages/SingleExercisePage';
 import { Cart } from './types/exercise';
+import PrintPage from './pages/PrintPage';
 
 function App() {
   const [query, setQuery] = useState("");
@@ -21,7 +22,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/exercise-list" element={<ExerciseListPage cart={cart}/>} />  {/* exercises added to print */}
         <Route path="/exercise/:id" element={<ExercisePage cart={cart} />} />
-        {/* <Route path="/print" element={< />} /> */}
+        <Route path="/print" element={<PrintPage />} />
       </Routes>
     </BrowserRouter>
   );
