@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
-import ExerciseOverview from "../components/Cards/ExerciseListCard";
+import ExerciseListCard from "../components/ExerciseListCard";
 import Sidebar from "../components/Sidebar";
 import { Cart, type Exercise } from "../types/exercise";
 import styles from "./ExerciseListPage.module.css";
 
-// Extended type to include image_url which we add after fetching
 interface CartExerciseWithImage extends Exercise {
   image_url?: string;
 }
@@ -27,7 +26,7 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
     const interval = setInterval(() => {
       fetchCartExercises();
     }, 1000);
-    
+
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -50,7 +49,6 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
 
       if (error) throw error;
 
-      // If no DB data, just show cart exercises
       if (!data) {
         setCartExercises(exercises);
         setLoading(false);
@@ -72,7 +70,6 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
         return {
           ...cartEx,
           image_url: imageUrl,
-          // Preserve cart-specific fields
           frequency: cartEx.frequency,
           frequencyType: cartEx.frequencyType,
           sets: cartEx.sets,
@@ -183,20 +180,18 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
             <>
               {filteredExercises.map((ex) => (
                 <div key={ex.addedAt ?? ex.id} style={{ position: "relative", marginBottom: "16px" }}>
-                  {/* ExerciseOverview is the CARD now; pass Exercise type fields */}
-                  <ExerciseOverview
+                  <ExerciseListCard
                     id={ex.id}
                     name={ex.name}
                     category={ex.category}
                     description={ex.description}
-                    image_path={ex.image_path}
+                    imageUrl={ex.image_url || "/images/default.png"}
                     frequency={ex.frequency}
                     frequencyType={ex.frequencyType}
                     sets={ex.sets}
                     reps={ex.reps}
                     repType={ex.repType}
                     comments={ex.comments}
-                    addedAt={ex.addedAt}
                   />
 
                   <button

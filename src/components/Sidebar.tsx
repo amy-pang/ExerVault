@@ -8,14 +8,10 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ exercises }: SidebarProps) {
-  const handlePrint = () => {
-    window.print();
-  };
-
   return (
     <aside className="sidebar-col">
       <div className="print-btn-row">
-        <button className="print-button" onClick={handlePrint}>
+        <button className="print-button">
           Print
         </button>
       </div>

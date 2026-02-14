@@ -1,0 +1,84 @@
+.exercise-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.clear-cart-button {
+  padding: 10px 20px;
+  background: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.clear-cart-button:hover {
+  background: #cc0000;
+}
+
+.empty-cart-container {
+  text-align: center;
+  padding: 80px 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 2px dashed #d1d5db;
+}
+
+.empty-cart-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.empty-cart-title {
+  font-size: 1.3em;
+  color: #333;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.empty-cart-message {
+  font-size: 1em;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.empty-cart-button {
+  padding: 14px 60px;
+  font-size: 16px;
+}
+
+.exercise-card-wrapper {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.remove-from-cart-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.remove-from-cart-button:hover {
+  background: #cc0000;
+  transform: scale(1.1);
+}
