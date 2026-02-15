@@ -19,7 +19,7 @@ function App() {
         onQueryChange={setQuery}
       />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<HomePage cart={cart}/>} />
         <Route path="/exercise-list" element={<ExerciseListPage cart={cart}/>} />  {/* exercises added to print */}
         <Route path="/exercise/:id" element={<ExercisePage cart={cart} />} />
         <Route path="/print" element={<PrintPage />} />

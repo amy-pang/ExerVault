@@ -7,19 +7,14 @@ import { Cart } from '../types/exercise';
 import type { Exercise } from '../types/exercise';
 import Filter from "../components/Filter";
 
-interface ExerciseData {
-  id: string;
-  name: string;
-  category: string;
-  description: string;
-  image_path: string;
+interface ExercisePageProps {
+  cart: Cart;
 }
 
-export default function HomePage() {
-  const [exercises, setExercises] = useState<ExerciseData[]>([]);
+export default function HomePage({ cart }: ExercisePageProps) {
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [cart] = useState(() => new Cart());
   const navigate = useNavigate();
 
   const filteredExercises =
@@ -46,7 +41,7 @@ export default function HomePage() {
     fetchExercises();
   }, []);
 
-  const handleAddToCart = (exerciseData: ExerciseData) => {
+  const handleAddToCart = (exerciseData: Exercise) => {
     const exerciseToAdd: Exercise = {
       id: exerciseData.id,
       name: exerciseData.name,
