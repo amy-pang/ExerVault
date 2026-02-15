@@ -57,7 +57,6 @@ export default function HomePage() {
     };
 
     cart.addToCart(exerciseToAdd);
-    navigate('/cart');
   };
 
   if (loading) {
@@ -99,15 +98,16 @@ export default function HomePage() {
               <strong>Category:</strong> {exercise.category}
             </p>
             <p className={styles.description}>{exercise.description}</p>
-
             <button
               className={styles.addButton}
               onClick={(e) => {
+                console.log('Button clicked!');
                 e.stopPropagation();
+                console.log('Adding exercise:', exercise.name);
                 handleAddToCart(exercise);
               }}
             >
-              <Plus size={20} />
+              +
             </button>
           </div>
         ))}
