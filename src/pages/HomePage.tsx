@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
-import styles from "./HomePage.module.css";
-import { Plus } from "lucide-react";
-import { supabase } from "../supabaseClient";
+import React, { useEffect, useState } from 'react';
+import styles from './HomePage.module.css';
+import { Plus } from 'lucide-react';
+import { supabase } from '../supabaseClient';
+import { useNavigate } from 'react-router-dom';
+import { Cart } from '../types/exercise';
+import type { Exercise } from '../types/exercise';
 import Filter from "../components/Filter";
 
-interface Exercise {
+interface ExerciseData {
   id: string;
   name: string;
   category: string;
@@ -13,22 +16,24 @@ interface Exercise {
 }
 
 export default function HomePage() {
+  const [exercises, setExercises] = useState<ExerciseData[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cart] = useState(() => new Cart());
+  const navigate = useNavigate();
 
   const filteredExercises =
-    selectedCategories.length === 0
-      ? exercises
-      : exercises.filter((exercise) =>
-          selectedCategories.includes(exercise.category?.trim().toLowerCase())
-        );
+   selectedCategories.length === 0
+     ? exercises
+     : exercises.filter((exercise) =>
+         selectedCategories.includes(exercise.category?.trim().toLowerCase())
+       );
 
   useEffect(() => {
     async function fetchExercises() {
       const { data, error } = await supabase
-        .from("exercises")
-        .select("id, name, category, description, image_path");
+        .from('exercises')
+        .select('id, name, category, description, image_path');
 
       if (error) {
         console.error("Error fetching exercises:", error);
@@ -41,12 +46,27 @@ export default function HomePage() {
     fetchExercises();
   }, []);
 
+  const handleAddToCart = (exerciseData: ExerciseData) => {
+    const exerciseToAdd: Exercise = {
+      id: exerciseData.id,
+      name: exerciseData.name,
+      category: exerciseData.category || '',
+      description: exerciseData.description,
+      image_path: exerciseData.image_path,
+      addedAt: Date.now(),
+    };
+
+    cart.addToCart(exerciseToAdd);
+    navigate('/cart');
+  };
+
   if (loading) {
     return <div className={styles.homePage}>Loading...</div>;
   }
 
   return (
     <div className={styles.homePage}>
+      {/* Welcome */}
       <div className={styles.pageHeaderWrapper}>
         <div className={styles.pageHeader}>
           <h1 className={styles.welcomeText}>Welcome Back!</h1>
@@ -54,9 +74,15 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Exercise Cards */}
       <div className={styles.exerciseGrid}>
         {filteredExercises.map((exercise) => (
-          <div key={exercise.id} className={styles.exerciseCard}>
+          <div
+            key={exercise.id}
+            className={styles.exerciseCard}
+            onClick={() => navigate(`/exercise/${exercise.id}`)}
+            style={{ cursor: 'pointer' }}
+          >
             <div className={styles.cardImage}>
               {exercise.image_path ? (
                 <img
@@ -69,15 +95,19 @@ export default function HomePage() {
             </div>
 
             <h3>{exercise.name}</h3>
-
             <p className={styles.equipment}>
               <strong>Category:</strong> {exercise.category}
             </p>
-
             <p className={styles.description}>{exercise.description}</p>
 
-            <button className={styles.addButton} type="button" aria-label="Add exercise">
-              <Plus size={24} />
+            <button
+              className={styles.addButton}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart(exercise);
+              }}
+            >
+              <Plus size={20} />
             </button>
           </div>
         ))}
