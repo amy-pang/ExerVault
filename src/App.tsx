@@ -2,12 +2,11 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import ExerciseListPage from './pages/ExerciseListPage';
-import AdminPanel from './components/AdminPanel';
 import HomePage from './pages/HomePage'
 import Header from './components/Header';
-import ExercisePage from './pages/ExercisePage';
-import ExerciseOverview from './components/ExerciseOverview/ExerciseOverview'
+import ExercisePage from './pages/SingleExercisePage';
 import { Cart } from './types/exercise';
+import PrintPage from './pages/PrintPage';
 
 function App() {
   const [query, setQuery] = useState("");
@@ -20,11 +19,10 @@ function App() {
         onQueryChange={setQuery}
       />
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/cart" element={<ExerciseListPage />} />
+        <Route path="/" element={<HomePage cart={cart}/>} />
+        <Route path="/exercise-list" element={<ExerciseListPage cart={cart}/>} />  {/* exercises added to print */}
         <Route path="/exercise/:id" element={<ExercisePage cart={cart} />} />
-        <Route path="/exercise-overview" element={<ExerciseOverview />} />
-        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/print" element={<PrintPage />} />
       </Routes>
     </BrowserRouter>
   );

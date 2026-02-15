@@ -1,0 +1,202 @@
+.homePage {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 24px;
+}
+
+/* Grid */
+.exerciseGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Cards (restore "before" look: blue tile) */
+.exerciseCard {
+  background-color: #bfdbfe;          /* blue tile */
+  border-radius: 18px;               /* rounder */
+  padding: 24px;
+  padding-bottom: 80px;              /* more space for button */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+
+  border: none;                      /* no subtle gray border */
+  box-shadow: none;                  /* flatter like before */
+  transition: transform 0.2s ease;
+}
+
+.exerciseCard:hover {
+  transform: translateY(-4px);
+}
+
+/* Image (restore strong border + inset feel) */
+.cardImage {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border: 2px solid #000000;         /* black border */
+  border-radius: 10px;
+  margin-bottom: 16px;
+  background-color: #f3f4f6;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  max-height: 120px;
+  padding-right: 8px;
+}
+
+.cardImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Scrollbar styling */
+.description::-webkit-scrollbar {
+  width: 6px;
+}
+
+.description::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.description::-webkit-scrollbar-thumb {
+  background: rgba(236, 72, 153, 0.5);
+  border-radius: 3px;
+}
+
+.description::-webkit-scrollbar-thumb:hover {
+  background: rgba(236, 72, 153, 0.7);
+}
+
+.placeholderText {
+  color: #999;
+  font-size: 14px;
+}
+
+/* Text */
+.exerciseCard h3 {
+  color: #111827;
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.equipment {
+  color: #2563eb;                    /* category blue */
+  font-size: 14px;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.equipment strong {
+  font-weight: 600;
+}
+
+/* This white inset description box is the "before" vibe */
+.description {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 14px 14px;
+  color: #6b7280;
+  font-size: 14px;
+  text-align: left;
+  line-height: 1.55;
+
+  margin-top: 6px;
+  margin-bottom: 16px;
+  word-wrap: break-word;
+
+  height: 150px;
+  overflow-y: auto;
+}
+
+/* Scrollbar styling */
+.description::-webkit-scrollbar {
+  width: 6px;
+}
+
+.description::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.description::-webkit-scrollbar-thumb {
+  background: grey;
+  border-radius: 3px;
+}
+
+.description::-webkit-scrollbar-thumb:hover {
+  background: grey;
+}
+
+/* Add button (white circle with black border like before) */
+.addButton {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+
+  background-color: #ffffff;
+  border: 2px solid #000000;
+  border-radius: 30%;
+
+  width: 48px;
+  height: 48px;
+
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #111827;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.addButton:hover {
+  transform: scale(1.06);
+  background-color: #f5f5f5;
+}
+
+/* Lucide icon */
+.addButton svg {
+  stroke: #111827;
+}
+
+/* Page header */
+.pageHeaderWrapper {
+  width: 100%;
+}
+
+.pageHeader {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.welcomeText {
+  margin: 0;
+  color: #111827;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .exerciseGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .exerciseGrid {
+    grid-template-columns: 1fr;
+  }
+}

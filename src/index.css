@@ -11,6 +11,8 @@
   -moz-osx-font-smoothing: grayscale;
 
   --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: rgba(0, 0, 0, 0.02);
   --border: rgba(0, 0, 0, 0.08);
   --text: rgba(0, 0, 0, 0.88);
   --muted: rgba(0, 0, 0, 0.55);
@@ -22,6 +24,7 @@
   --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.14);
 
   --radius-pill: 999px;
+  --radius-xl: 20px;
   --radius-lg: 16px;
   --radius-md: 12px;
 

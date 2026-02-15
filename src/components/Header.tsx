@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { AiOutlineHome, AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineHome } from "react-icons/ai";
 import { ShoppingCart } from "lucide-react";
-import "./Header.css";
 import { supabase } from "../supabaseClient";
-import ExercisePage from "../pages/ExercisePage";
 import { Link } from "react-router-dom";
+import styles from "./Header.module.css";
 
 type HeaderProps = {
   query: string;
@@ -18,13 +17,10 @@ type ExerciseResult = {
   category: string | null;
 };
 
-export default function Header({ query, onQueryChange, onPickExercise }: HeaderProps) {
+export default function Header({ query, onQueryChange }: HeaderProps) {
   const [results, setResults] = useState<ExerciseResult[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [exerciseOpen, setExerciseOpen] = useState(false);
-  const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(null);
-
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
 
@@ -44,14 +40,14 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
     if (!q) {
       setResults([]);
       setOpen(false);
+      setLoading(false);
       return;
     }
 
     setOpen(true);
+    setLoading(true);
 
     const t = window.setTimeout(async () => {
-      console.log("Searching NAME for:", q);
-
       const { data, error } = await supabase
         .from("exercises")
         .select("id,name,category")
@@ -63,27 +59,27 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
         console.error("Search error:", error);
         setResults([]);
       } else {
-        console.log("Results:", data);
-        setResults((data ?? []) as { id: string; name: string; category: string }[]);
+        setResults((data ?? []) as ExerciseResult[]);
       }
+
+      setLoading(false);
     }, 250);
 
     return () => window.clearTimeout(t);
   }, [query]);
 
-
   return (
-    <div className="header-wrapper">
-      <header className="header-container">
-        <Link to="/" className="header-home-link">
-          <AiOutlineHome className="header-icon" color="black" />
+    <div className={styles.headerWrapper}>
+      <header className={styles.headerContainer}>
+        <Link to="/" className={styles.headerHomeLink} aria-label="Home">
+          <AiOutlineHome className={styles.headerIcon} />
         </Link>
 
         {/* This wrapper anchors the popup underneath the input */}
-        <div className="search-wrap" ref={wrapperRef}>
-          <div className="search-bar">
+        <div className={styles.searchWrap} ref={wrapperRef}>
+          <div className={styles.searchBar}>
             <input
-              className="search-input"
+              className={styles.searchInput}
               type="text"
               placeholder="Search exercises..."
               value={query}
@@ -97,22 +93,26 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
 
           {/* Popup dropdown */}
           {open && (
-            <div className="search-popup" role="listbox">
+            <div className={styles.searchPopup} role="listbox">
               {loading ? (
-                <div className="search-popup-row muted">Searching…</div>
+                <div className={`${styles.searchPopupRow} ${styles.muted}`}>
+                  Searching…
+                </div>
               ) : results.length === 0 ? (
-                <div className="search-popup-row muted">No matches</div>
+                <div className={`${styles.searchPopupRow} ${styles.muted}`}>
+                  No matches
+                </div>
               ) : (
                 results.map((ex) => (
                   <Link
                     key={ex.id}
                     to={`/exercise/${ex.id}`}
-                    className="search-popup-row"
+                    className={styles.searchPopupRow}
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => setOpen(false)}
                   >
-                    <div className="row-title">{ex.name}</div>
-                    <div className="row-sub">{ex.category}</div>
+                    <div className={styles.rowTitle}>{ex.name}</div>
+                    <div className={styles.rowSub}>{ex.category}</div>
                   </Link>
                 ))
               )}
@@ -120,8 +120,12 @@ export default function Header({ query, onQueryChange, onPickExercise }: HeaderP
           )}
         </div>
 
-        <Link to="/cart" className="header-home-link">
-          <ShoppingCart className="header-icon" color="black" />
+        <Link
+          to="/exercise-list"
+          className={styles.headerHomeLink}
+          aria-label="Exercise cart"
+        >
+          <ShoppingCart className={styles.headerIcon} />
         </Link>
       </header>
     </div>
