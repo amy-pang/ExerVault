@@ -1,0 +1,181 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f7fbff;
+  color: #333;
+}
+
+
+#controls {
+  padding: 20px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin-bottom: 20px;
+}
+
+.controlsRow {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.controlsLeft {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.controlsRow label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.printBtn {
+  margin-left: auto;
+  padding: 14px 22px;
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  background: #1a4b7a;
+  color: white;
+  cursor: pointer;
+}
+
+.printBtn:hover {
+  filter: brightness(1.08);
+}
+
+.printBtn:active {
+  transform: translateY(1px);
+}
+
+.printBtn:focus-visible {
+  outline: 3px solid rgba(26, 75, 122, 0.35);
+  outline-offset: 3px;
+}
+
+
+/*  Print area */
+
+#printArea {
+  background: white;
+  padding: 24px;
+  width: 800px;
+  margin: 0 auto;
+}
+
+.heading {
+  font-weight: bold;
+}
+
+
+/* Exercise cards */
+
+.printCards {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+
+
+/* Bigger image container */
+.exercise-card-image {
+  width: 220px !important;
+  height: 220px !important;
+  flex: 0 0 220px !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Image fills container */
+.exercise-card-image img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block;
+}
+
+
+
+
+.exercise-name {
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.exercise-description {
+  line-height: 1.35;
+}
+
+
+/* =========================
+   Print color handling
+   ========================= */
+
+* {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+
+@media print {
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  @page {
+    margin: 0.5in;
+  }
+
+  #controls {
+    display: none !important;
+  }
+
+  header {
+    display: none !important;
+  }
+
+  #printArea {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  .exercise-card {
+    height: auto !important;
+    min-height: 0 !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    padding: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Slightly smaller but still large in print */
+  .exercise-card-image {
+    width: 200px !important;
+    height: 200px !important;
+    flex: 0 0 200px !important;
+  }
+
+  .exercise-card-image img {
+    max-height: none !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .exercise-name {
+    font-size: 14px !important;
+  }
+
+  .exercise-description {
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+  }
+}
