@@ -57,6 +57,8 @@ export default function HomePage() {
     };
 
     cart.addToCart(exerciseToAdd);
+    console.log('Added to cart:', exerciseToAdd.name);
+    console.log('Cart now has:', cart.getExercises().length, 'items');
   };
 
   if (loading) {
