@@ -1,0 +1,236 @@
+.exercise-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.clear-cart-button {
+  padding: 10px 20px;
+  background: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.clear-cart-button:hover {
+  background: #cc0000;
+}
+
+.empty-cart-container {
+  text-align: center;
+  padding: 80px 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 2px dashed #d1d5db;
+}
+
+.empty-cart-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.empty-cart-title {
+  font-size: 1.3em;
+  color: #333;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.empty-cart-message {
+  font-size: 1em;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.empty-cart-button {
+  padding: 14px 60px;
+  font-size: 16px;
+}
+
+.exercise-list-card-wrapper {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.exercise-list-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1.5px solid #e0e0e0;
+  padding: 20px 0 20px 24px;
+  min-height: 140px;
+}
+
+.exercise-list-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding-right: 16px;
+}
+
+.exercise-list-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.exercise-list-info-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.exercise-list-info-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.exercise-list-name {
+  font-size: 1.05em;
+  font-weight: 700;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.exercise-list-description {
+  font-size: 0.85em;
+  color: #777;
+  margin: 0;
+  padding-left: 32px;
+  line-height: 1.4;
+}
+
+.exercise-list-category-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 32px;
+  margin-top: 2px;
+}
+
+.exercise-list-category-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.exercise-list-category-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.exercise-list-category-text {
+  font-size: 0.85em;
+  color: #555;
+  margin: 0;
+}
+
+.exercise-list-image {
+  width: 140px;
+  height: 120px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #f5f5f5;
+  border-radius: 12px;
+  margin-right: 20px;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #e0e0e0;
+}
+
+.exercise-list-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.exercise-list-no-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: 8px;
+  color: #aaa;
+}
+
+.exercise-list-no-image svg {
+  width: 36px;
+  height: 36px;
+  opacity: 0.5;
+}
+
+.exercise-list-no-image span {
+  font-size: 0.75em;
+  opacity: 0.6;
+}
+
+.exercise-list-prescription {
+  margin-top: 8px;
+  padding-top: 8px;
+  padding-left: 32px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.exercise-list-prescription-item {
+  font-size: 0.85em;
+  color: #555;
+  margin: 3px 0;
+}
+
+.exercise-list-prescription-item span {
+  font-weight: 600;
+  color: #333;
+}
+
+.remove-from-cart-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.remove-from-cart-button:hover {
+  background: #cc0000;
+  transform: scale(1.1);
+}
