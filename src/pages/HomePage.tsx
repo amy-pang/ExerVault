@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './HomePage.module.css';
-import { Plus } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import { Cart } from '../types/exercise';
