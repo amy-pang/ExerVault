@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import type { Exercise } from "../../types/exercise";
 import { supabase } from "../../supabaseClient";
 import ExerciseCard from "./ExerciseCard";
