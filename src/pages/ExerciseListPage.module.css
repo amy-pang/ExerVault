@@ -53,7 +53,7 @@
   cursor: pointer;
 
   background: #c7e6ff;
-  color: #ffffff;
+  color: #000000;
 
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
