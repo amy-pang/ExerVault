@@ -24,6 +24,22 @@
   box-sizing: border-box;
 }
 
+/* ---------- Left icon group ---------- */
+.headerLeftIcons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* ---------- Right icon group ---------- */
+.headerRightIcons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
 /* ---------- Home/cart links (click target + hover) ---------- */
 .headerHomeLink {
   display: inline-flex;
