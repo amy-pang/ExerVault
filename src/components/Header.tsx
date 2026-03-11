@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineHome } from "react-icons/ai";
-import { ClipboardList, LogIn } from "lucide-react";
+import { ClipboardList, LogIn, Plus } from "lucide-react";
 import { supabase } from "../supabaseClient";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
