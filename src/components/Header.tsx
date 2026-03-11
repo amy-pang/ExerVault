@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineHome } from "react-icons/ai";
-import { ShoppingCart, Plus } from "lucide-react";
+import { ClipboardList } from "lucide-react";
 import { supabase } from "../supabaseClient";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
@@ -127,7 +127,7 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
           className={styles.headerHomeLink}
           aria-label="Exercise cart"
         >
-          <ShoppingCart className={styles.headerIcon} />
+          <ClipboardList className={styles.headerIcon} />
         </Link>
       </header>
     </div>
