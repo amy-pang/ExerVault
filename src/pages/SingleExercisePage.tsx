@@ -23,9 +23,48 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
   const [description, setDescription] = useState("");
   const [comments, setComments] = useState("");
   const [isInCart, setIsInCart] = useState(false);
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
+
+  const ensureNonNegativeValue = (value: string) => {
+    if (!value.trim()) return "";
+    const numericValue = Number(value);
+    if (Number.isNaN(numericValue)) return "";
+    return Math.max(0, numericValue).toString();
+  };
+
+  useEffect(() => {
+    if (!notification) return;
+
+    const timer = window.setTimeout(() => {
+      setNotification(null);
+    }, 2800);
+
+    return () => window.clearTimeout(timer);
+  }, [notification]);
 
   const handleAddToList = () => {
     if (!exercise) return;
+
+    if (!frequency.trim() || !sets.trim() || !reps.trim()) {
+      setNotification({
+        message: "Error: Please fill Frequency, Sets, and Reps.",
+        type: "error",
+      });
+      return;
+    }
+
+    if (Number(frequency) < 0 || Number(sets) < 0 || Number(reps) < 0) {
+      setNotification({
+        message: "Error: Frequency, Sets, and Reps cannot be negative.",
+        type: "error",
+      });
+      return;
+    }
+
+    const wasInCart = isInCart;
 
     const exerciseToAdd: Exercise = {
       id: exercise.id,
@@ -43,6 +82,10 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
 
     cart.addToCart(exerciseToAdd);
     setIsInCart(true);
+    setNotification({
+      message: wasInCart ? "Exercise updated in list." : "Exercise added to list.",
+      type: "success",
+    });
     console.log(`${exercise.name} added to list!`);
     console.log(cart.getExercises());
   };
@@ -100,10 +143,10 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
 
   // Load saved values on mount
   useEffect(() => {
-    setFrequency(localStorage.getItem("frequency") || "");
+    setFrequency(ensureNonNegativeValue(localStorage.getItem("frequency") || ""));
     setFrequencyType(localStorage.getItem("frequencyType") || "week");
-    setSets(localStorage.getItem("sets") || "");
-    setReps(localStorage.getItem("reps") || "");
+    setSets(ensureNonNegativeValue(localStorage.getItem("sets") || ""));
+    setReps(ensureNonNegativeValue(localStorage.getItem("reps") || ""));
     setRepType(localStorage.getItem("repType") || "reps");
     setComments(localStorage.getItem("comments") || "");
   }, []);
@@ -119,6 +162,20 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
 
   return (
     <div className={styles.page}>
+      {notification && (
+        <div
+          className={`${styles.notification} ${
+            notification.type === "error"
+              ? styles.notificationError
+              : styles.notificationSuccess
+          }`}
+          role="status"
+          aria-live="polite"
+        >
+          {notification.message}
+        </div>
+      )}
+
       <h1 className={styles.exerciseTitle}>
         {loading ? "Loading..." : exercise?.name || "Exercise Name"}
         <span className={styles.category}>{exercise?.category || "Category"}</span>
@@ -155,9 +212,10 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
             <label className={styles.label}>Frequency</label>
             <input
               type="number"
+              min={0}
               className={styles.inputBox}
               value={frequency}
-              onChange={(e) => setFrequency(e.target.value)}
+              onChange={(e) => setFrequency(ensureNonNegativeValue(e.target.value))}
             />
             <select
               className={styles.dropdown}
@@ -174,9 +232,10 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
             <label className={styles.label}>Sets</label>
             <input
               type="number"
+              min={0}
               className={styles.inputBox}
               value={sets}
-              onChange={(e) => setSets(e.target.value)}
+              onChange={(e) => setSets(ensureNonNegativeValue(e.target.value))}
             />
             <span className={styles.inputDesc}># of Sets</span>
           </div>
@@ -185,9 +244,10 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
             <label className={styles.label}>{repType === "reps" ? "Reps" : "Seconds"}</label>
             <input
               type="number"
+              min={0}
               className={styles.inputBox}
               value={reps}
-              onChange={(e) => setReps(e.target.value)}
+              onChange={(e) => setReps(ensureNonNegativeValue(e.target.value))}
             />
             <select
               className={styles.dropdown}

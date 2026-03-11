@@ -8,6 +8,34 @@
 
   box-sizing: border-box;
   padding: 28px 20px;
+  position: relative;
+}
+
+.notification {
+  position: fixed;
+  top: 88px;
+  right: 20px;
+  z-index: 1000;
+
+  min-width: 280px;
+  max-width: 420px;
+  padding: 12px 14px;
+
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.notificationSuccess {
+  background: var(--blue-100);
+}
+
+.notificationError {
+  background: var(--surface-2);
 }
 
 /* Title area */
