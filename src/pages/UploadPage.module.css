@@ -1,0 +1,314 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial,
+    sans-serif;
+  color: var(--text);
+  box-sizing: border-box;
+  padding: 28px 20px;
+}
+
+.pageTitle {
+  max-width: 1100px;
+  margin: 8px auto 18px;
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+  color: var(--text);
+}
+
+/* Main layout */
+.content {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.leftSection,
+.rightSection {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  padding: 18px;
+}
+
+.leftSection {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.rightSection {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Image upload area */
+.imagePlaceholder {
+  width: 260px;
+  height: 260px;
+  background: var(--surface-2);
+  border: 2px dashed rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 10px 22px rgba(0, 0, 0, 0.06);
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.imagePlaceholder:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.imagePlaceholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.imagePrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 14px;
+  user-select: none;
+}
+
+.imagePromptIcon {
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.imageActions {
+  display: flex;
+  gap: 8px;
+}
+
+.changeBtn,
+.removeBtn {
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transition: transform 140ms ease, box-shadow 140ms ease,
+    border-color 140ms ease;
+}
+
+.changeBtn {
+  background: var(--blue-100);
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.changeBtn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 0, 0, 0.14);
+}
+
+.removeBtn {
+  background: #fff;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.removeBtn:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fca5a5;
+  transform: translateY(-1px);
+}
+
+/* Form inputs — matching SingleExercisePage */
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+.label {
+  width: 120px;
+  flex: 0 0 120px;
+  font-weight: 650;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.75);
+  background: var(--blue-100);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 8px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.inputBoxWide,
+.dropdown {
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
+  color: var(--text);
+  padding: 0 12px;
+  font-size: 14px;
+  line-height: 1;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  transition: border-color 160ms ease, box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.inputBoxWide {
+  flex: 1;
+}
+
+.dropdown {
+  min-width: 200px;
+  cursor: pointer;
+}
+
+.inputBoxWide:focus,
+.dropdown:focus,
+.description:focus {
+  outline: none;
+  border-color: rgba(0, 0, 0, 0.22);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 10px 22px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+.inputBoxWide:hover,
+.dropdown:hover {
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+/* Description textarea */
+.description {
+  width: 100%;
+  min-height: 200px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--text);
+  resize: vertical;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  transition: border-color 160ms ease, box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.description::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+/* Messages */
+.errorMsg {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.successMsg {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #86efac;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Submit button — matches SingleExercisePage .addBtn */
+.addBtn {
+  margin-top: 6px;
+  align-self: flex-start;
+  height: 48px;
+  padding: 0 24px;
+  background: var(--blue-100);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.88);
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 12px 26px rgba(0, 0, 0, 0.08);
+  transition: transform 140ms ease, box-shadow 140ms ease,
+    border-color 140ms ease;
+}
+
+.addBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: rgba(0, 0, 0, 0.14);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.65) inset,
+    0 16px 34px rgba(0, 0, 0, 0.12);
+}
+
+.addBtn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.addBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .content {
+    flex-direction: column;
+  }
+  .leftSection,
+  .rightSection {
+    width: 100%;
+  }
+  .imagePlaceholder {
+    width: 100%;
+    max-width: 360px;
+    height: 260px;
+  }
+}
+
+@media (max-width: 520px) {
+  .page {
+    padding: 18px 14px;
+  }
+
+  .pageTitle {
+    font-size: 24px;
+  }
+
+  .inputRow {
+    flex-wrap: wrap;
+  }
+
+  .label {
+    flex: 1 1 100%;
+    width: auto;
+  }
+
+  .inputBoxWide {
+    width: 100%;
+  }
+}
