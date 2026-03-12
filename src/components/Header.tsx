@@ -79,7 +79,11 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
           </Link>
         </div>
 
-        {/* This wrapper anchors the popup underneath the input */}
+          <Link to="/upload" className={styles.headerHomeLink} aria-label="Add exercise">
+            <Plus className={styles.headerIcon} />
+          </Link>
+        </div>
+
         <div className={styles.searchWrap} ref={wrapperRef}>
           <div className={styles.searchBar}>
             <input
