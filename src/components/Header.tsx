@@ -79,7 +79,6 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
           </Link>
         </div>
 
-        {/* This wrapper anchors the popup underneath the input */}
         <div className={styles.searchWrap} ref={wrapperRef}>
           <div className={styles.searchBar}>
             <input
