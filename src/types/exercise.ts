@@ -42,7 +42,7 @@ export class Cart {
 
   clearCart(): void {
     this.exercises = [];
-    this.saveCart();
+    localStorage.clear();
   }
 
   getCartCount(): number {
