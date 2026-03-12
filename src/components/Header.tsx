@@ -69,7 +69,7 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
   return (
     <div className={styles.headerWrapper}>
       <header className={styles.headerContainer}>
-        <div className={styles.headerLeftIcons}>
+        <div className={styles.leftIcons}>
           <Link to="/home" className={styles.headerHomeLink} aria-label="Home">
             <AiOutlineHome className={styles.headerIcon} />
           </Link>

@@ -9,6 +9,7 @@ import { Cart } from './types/exercise';
 import PrintPage from './pages/PrintPage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
+import UploadPage from './pages/UploadPage';
 
 function App() {
   const [query, setQuery] = useState("");
@@ -28,6 +29,7 @@ function App() {
         <Route path="/print" element={<PrintPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
+        <Route path="/create-exericse" element={<UploadPage />} />
       </Routes>
     </BrowserRouter>
   );
