@@ -24,7 +24,7 @@ function App() {
         <Route path="/exercise-list" element={<ExerciseListPage cart={cart}/>} />  {/* exercises added to print */}
         <Route path="/exercise/:id" element={<ExercisePage cart={cart} />} />
         <Route path="/print" element={<PrintPage />} />
-        <Route path="/upload" element={<UploadPage />} />
+        <Route path="/create-exercise" element={<UploadPage />} />
       </Routes>
     </BrowserRouter>
   );
