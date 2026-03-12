@@ -24,7 +24,6 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
 
-  // Close popup when clicking outside
   useEffect(() => {
     function onDocMouseDown(e: MouseEvent) {
       if (!wrapperRef.current) return;
@@ -34,7 +33,6 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
     return () => document.removeEventListener("mousedown", onDocMouseDown);
   }, []);
 
-  // Debounced database search
   useEffect(() => {
     const q = query.trim();
     if (!q) {
@@ -75,9 +73,12 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
           <Link to="/home" className={styles.headerHomeLink} aria-label="Home">
             <AiOutlineHome className={styles.headerIcon} />
           </Link>
+
+          <Link to="/upload" className={styles.headerHomeLink} aria-label="Add exercise">
+            <Plus className={styles.headerIcon} />
+          </Link>
         </div>
 
-        {/* This wrapper anchors the popup underneath the input */}
         <div className={styles.searchWrap} ref={wrapperRef}>
           <div className={styles.searchBar}>
             <input
@@ -93,7 +94,6 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
             />
           </div>
 
-          {/* Popup dropdown */}
           {open && (
             <div className={styles.searchPopup} role="listbox">
               {loading ? (
