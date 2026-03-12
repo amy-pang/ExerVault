@@ -109,14 +109,16 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
       }
       
       setExercise(data);
-      setDescription(data.description || "");
+      
+      // Load description: Check local storage first, fallback to DB
+      const savedDesc = localStorage.getItem(`${id}_description`);
+      setDescription(savedDesc !== null ? savedDesc : (data.description || ""));
       
       // Check if exercise is already in cart
       const cartExercises = cart.getExercises();
       const existsInCart = cartExercises.some(ex => ex.id === id);
       setIsInCart(existsInCart);
       
-      // Debug: log the image path
       console.log('Image path from DB:', data.image_path);
       
       // Get image URL from storage
@@ -139,26 +141,21 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
     }
     
     fetchExercise();
-  }, [id]);
+  }, [id, cart]); // Added cart dependency to ensure list sync is accurate
 
-  // Load saved values on mount
+  // Load saved values whenever the exercise ID changes
   useEffect(() => {
-    setFrequency(ensureNonNegativeValue(localStorage.getItem("frequency") || ""));
-    setFrequencyType(localStorage.getItem("frequencyType") || "week");
-    setSets(ensureNonNegativeValue(localStorage.getItem("sets") || ""));
-    setReps(ensureNonNegativeValue(localStorage.getItem("reps") || ""));
-    setRepType(localStorage.getItem("repType") || "reps");
-    setComments(localStorage.getItem("comments") || "");
-  }, []);
+    if (!id) return;
 
-  // Persist values
-  useEffect(() => localStorage.setItem("frequency", frequency), [frequency]);
-  useEffect(() => localStorage.setItem("frequencyType", frequencyType), [frequencyType]);
-  useEffect(() => localStorage.setItem("sets", sets), [sets]);
-  useEffect(() => localStorage.setItem("reps", reps), [reps]);
-  useEffect(() => localStorage.setItem("repType", repType), [repType]);
-  useEffect(() => localStorage.setItem("description", description), [description]);
-  useEffect(() => localStorage.setItem("comments", comments), [comments]);
+    window.scrollTo({ top: 0, behavior: "auto" });
+    
+    setFrequency(ensureNonNegativeValue(localStorage.getItem(`${id}_frequency`) || ""));
+    setFrequencyType(localStorage.getItem(`${id}_frequencyType`) || "week");
+    setSets(ensureNonNegativeValue(localStorage.getItem(`${id}_sets`) || ""));
+    setReps(ensureNonNegativeValue(localStorage.getItem(`${id}_reps`) || ""));
+    setRepType(localStorage.getItem(`${id}_repType`) || "reps");
+    setComments(localStorage.getItem(`${id}_comments`) || "");
+  }, [id]);
 
   return (
     <div className={styles.page}>
@@ -215,12 +212,19 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
               min={0}
               className={styles.inputBox}
               value={frequency}
-              onChange={(e) => setFrequency(ensureNonNegativeValue(e.target.value))}
+              onChange={(e) => {
+                const val = ensureNonNegativeValue(e.target.value);
+                setFrequency(val);
+                if (id) localStorage.setItem(`${id}_frequency`, val);
+              }}
             />
             <select
               className={styles.dropdown}
               value={frequencyType}
-              onChange={(e) => setFrequencyType(e.target.value)}
+              onChange={(e) => {
+                setFrequencyType(e.target.value);
+                if (id) localStorage.setItem(`${id}_frequencyType`, e.target.value);
+              }}
             >
               <option value="day">Times/Day</option>
               <option value="week">Times/Week</option>
@@ -235,7 +239,11 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
               min={0}
               className={styles.inputBox}
               value={sets}
-              onChange={(e) => setSets(ensureNonNegativeValue(e.target.value))}
+              onChange={(e) => {
+                const val = ensureNonNegativeValue(e.target.value);
+                setSets(val);
+                if (id) localStorage.setItem(`${id}_sets`, val);
+              }}
             />
             <span className={styles.inputDesc}># of Sets</span>
           </div>
@@ -247,12 +255,19 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
               min={0}
               className={styles.inputBox}
               value={reps}
-              onChange={(e) => setReps(ensureNonNegativeValue(e.target.value))}
+              onChange={(e) => {
+                const val = ensureNonNegativeValue(e.target.value);
+                setReps(val);
+                if (id) localStorage.setItem(`${id}_reps`, val);
+              }}
             />
             <select
               className={styles.dropdown}
               value={repType}
-              onChange={(e) => setRepType(e.target.value)}
+              onChange={(e) => {
+                setRepType(e.target.value);
+                if (id) localStorage.setItem(`${id}_repType`, e.target.value);
+              }}
             >
               <option value="reps">Reps</option>
               <option value="seconds">Seconds</option>
@@ -265,14 +280,20 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
             className={styles.description}
             placeholder="Description of Exercise"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => {
+              setDescription(e.target.value);
+              if (id) localStorage.setItem(`${id}_description`, e.target.value);
+            }}
           />
 
           <textarea
             className={styles.comments}
             placeholder="Additional Comments..."
             value={comments}
-            onChange={(e) => setComments(e.target.value)}
+            onChange={(e) => {
+              setComments(e.target.value);
+              if (id) localStorage.setItem(`${id}_comments`, e.target.value);
+            }}
           />
 
           <button className={styles.addBtn} onClick={handleAddToList}>
