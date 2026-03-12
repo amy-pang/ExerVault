@@ -100,6 +100,8 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
     }
   };
 
+
+
   const handleContinueBrowsing = () => {
     navigate("/");
     window.scrollTo(0, 0);

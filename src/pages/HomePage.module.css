@@ -16,7 +16,7 @@
 
 /* Cards (restore "before" look: blue tile) */
 .exerciseCard {
-  background-color: #bfdbfe;          /* blue tile */
+  background-color: #c7e6ff;          /* blue tile */
   border-radius: 18px;               /* rounder */
   padding: 24px;
   padding-bottom: 80px;              /* more space for button */
