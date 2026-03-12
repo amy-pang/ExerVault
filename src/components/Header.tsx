@@ -24,7 +24,6 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
 
-  // Close popup when clicking outside
   useEffect(() => {
     function onDocMouseDown(e: MouseEvent) {
       if (!wrapperRef.current) return;
@@ -80,6 +79,7 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
           </Link>
         </div>
 
+        {/* This wrapper anchors the popup underneath the input */}
         <div className={styles.searchWrap} ref={wrapperRef}>
           <div className={styles.searchBar}>
             <input
