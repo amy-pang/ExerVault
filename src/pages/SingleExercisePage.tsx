@@ -49,6 +49,7 @@ export default function ExercisePage() {
       setIsInCart(true);
     }
   };
+  
 
   const handleDelete = async () => {
     if (!exercise) {
