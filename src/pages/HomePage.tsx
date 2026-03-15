@@ -51,7 +51,7 @@ export default function HomePage() {
     }
 
     fetchExercises();
-  }, []);
+  }, [location.key]);
 
   const openPopup = (exerciseData: Exercise, button: HTMLButtonElement) => {
     const rect = button.getBoundingClientRect();

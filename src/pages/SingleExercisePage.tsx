@@ -209,6 +209,7 @@ export default function ExercisePage() {
               className={styles.inputBox}
               value={frequency}
               onChange={(e) => setFrequency(e.target.value)}
+              onChange={(e) => setFrequency(e.target.value)}
             />
             <select
               className={styles.dropdown}
@@ -228,6 +229,7 @@ export default function ExercisePage() {
               className={styles.inputBox}
               value={sets}
               onChange={(e) => setSets(e.target.value)}
+              onChange={(e) => setSets(e.target.value)}
             />
             <span className={styles.inputDesc}># of Sets</span>
           </div>
@@ -238,6 +240,7 @@ export default function ExercisePage() {
               type="number"
               className={styles.inputBox}
               value={reps}
+              onChange={(e) => setReps(e.target.value)}
               onChange={(e) => setReps(e.target.value)}
             />
             <select
