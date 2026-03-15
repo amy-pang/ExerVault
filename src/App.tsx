@@ -29,7 +29,7 @@ function App() {
         <Route path="/print" element={<PrintPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
-        <Route path="/create-exericse" element={<UploadPage />} />
+        <Route path="/create-exercise" element={<UploadPage />} />
       </Routes>
     </BrowserRouter>
   );
