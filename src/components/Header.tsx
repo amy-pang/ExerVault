@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineHome } from "react-icons/ai";
 import { ClipboardList, Plus } from "lucide-react";
-import { ClipboardList, Plus } from "lucide-react";
 import { supabase } from "../supabaseClient";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
@@ -25,6 +24,7 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
 
+  // Close popup when clicking outside
   useEffect(() => {
     function onDocMouseDown(e: MouseEvent) {
       if (!wrapperRef.current) return;
@@ -74,10 +74,6 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
           <Link to="/" className={styles.headerHomeLink} aria-label="Home">
             <AiOutlineHome className={styles.headerIcon} />
           </Link>
-        <div className={styles.leftIcons}>
-          <Link to="/" className={styles.headerHomeLink} aria-label="Home">
-            <AiOutlineHome className={styles.headerIcon} />
-          </Link>
 
           <Link to="/create-exercise" className={styles.headerHomeLink} aria-label="Add exercise">
             <Plus className={styles.headerIcon} />
@@ -98,7 +94,8 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
               }}
             />
           </div>
-
+          
+          { /* Popup dropdown */ }
           {open && (
             <div className={styles.searchPopup} role="listbox">
               {loading ? (
