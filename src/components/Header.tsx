@@ -24,6 +24,7 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
 
+  // Close popup when clicking outside
   useEffect(() => {
     function onDocMouseDown(e: MouseEvent) {
       if (!wrapperRef.current) return;
@@ -93,7 +94,8 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
               }}
             />
           </div>
-
+          
+          { /* Popup dropdown */ }
           {open && (
             <div className={styles.searchPopup} role="listbox">
               {loading ? (
