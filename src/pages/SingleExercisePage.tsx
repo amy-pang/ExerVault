@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from '../supabaseClient';
 import { Cart } from '../types/exercise';
@@ -91,7 +91,7 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
         cart.removeFromCart(exercise.id);
       }
 
-      navigate("/");
+      navigate("/home");
     } catch (err: any) {
       console.error("Delete failed:", err);
       alert(`Failed to delete exercise: ${err.message || "Unknown error"}. Check the console for details.`);
