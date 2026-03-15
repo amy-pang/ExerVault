@@ -10,7 +10,6 @@ const CATEGORIES = [
   "Core",
   "Back",
   "Nerve Glide",
-  "Core",
   "Wrist/Hand",
   "Theraputty",
   "Vestibular",
@@ -101,8 +100,16 @@ export default function UploadPage() {
 
       // Reset form after short delay, then navigate home
       setTimeout(() => {
-        navigate("/");
-      }, 1500);
+          // Reset all fields
+        setName("");
+        setCategory("");
+        setDescription("");
+        setImageFile(null);
+        setImagePreview(null);
+  if (fileInputRef.current) fileInputRef.current.value = "";
+        navigate("/create-exercise");
+      }, 1);
+
     } catch (err: any) {
       setError(err.message || "Something went wrong.");
     } finally {
@@ -193,7 +200,7 @@ export default function UploadPage() {
           {error && <div className={styles.errorMsg}>{error}</div>}
           {success && (
             <div className={styles.successMsg}>
-              Exercise added! Redirecting...
+              Exercise added!
             </div>
           )}
 
