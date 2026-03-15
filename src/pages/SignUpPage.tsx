@@ -3,9 +3,10 @@ import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import styles from "./SignInPage.module.css";
 
-export default function SignInPage() {
+export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -13,23 +14,29 @@ export default function SignInPage() {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
+
+    if (password !== confirm) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signUp({ email, password });
 
     setLoading(false);
 
     if (error) {
       setError(error.message);
     } else {
-      navigate("/home");
+      navigate("/sign-in");
     }
   }
 
   return (
     <div className={styles.page}>
       <div className={styles.card}>
-        <h1 className={styles.title}>Sign in</h1>
+        <h1 className={styles.title}>Create account</h1>
 
         <form className={styles.form} onSubmit={handleSubmit}>
           <label className={styles.label} htmlFor="email">
@@ -57,20 +64,34 @@ export default function SignInPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            autoComplete="current-password"
+            autoComplete="new-password"
+          />
+
+          <label className={styles.label} htmlFor="confirm">
+            Confirm password
+          </label>
+          <input
+            id="confirm"
+            className={styles.input}
+            type="password"
+            placeholder="••••••••"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            required
+            autoComplete="new-password"
           />
 
           {error && <p className={styles.error}>{error}</p>}
 
           <button className={styles.submitBtn} type="submit" disabled={loading}>
-            {loading ? "Signing in…" : "Sign in"}
+            {loading ? "Creating account…" : "Sign up"}
           </button>
         </form>
 
         <p className={styles.footer}>
-          Don't have an account?{" "}
-          <Link to="/sign-up" className={styles.link}>
-            Sign up
+          Already have an account?{" "}
+          <Link to="/sign-in" className={styles.link}>
+            Sign in
           </Link>
         </p>
       </div>
