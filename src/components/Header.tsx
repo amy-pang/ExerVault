@@ -4,6 +4,7 @@ import { ClipboardList, LogIn, Plus } from "lucide-react";
 import { supabase } from "../supabaseClient";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
+import { Cart } from "../types/exercise";
 
 type HeaderProps = {
   query: string;
@@ -21,8 +22,23 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
   const [results, setResults] = useState<ExerciseResult[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const updateCartCount = () => {
+      const cart = new Cart();
+      setCartCount(cart.getCartCount());
+    };
+    updateCartCount();
+    window.addEventListener('storage', updateCartCount);
+    window.addEventListener('cartUpdated', updateCartCount);
+    return () => {
+      window.removeEventListener('storage', updateCartCount);
+      window.removeEventListener('cartUpdated', updateCartCount);
+    };
+  }, []);
 
   useEffect(() => {
     function onDocMouseDown(e: MouseEvent) {
@@ -41,10 +57,8 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
       setLoading(false);
       return;
     }
-
     setOpen(true);
     setLoading(true);
-
     const t = window.setTimeout(async () => {
       const { data, error } = await supabase
         .from("exercises")
@@ -52,17 +66,14 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
         .ilike("name", `%${q}%`)
         .order("name", { ascending: true })
         .limit(5);
-
       if (error) {
         console.error("Search error:", error);
         setResults([]);
       } else {
         setResults((data ?? []) as ExerciseResult[]);
       }
-
       setLoading(false);
     }, 250);
-
     return () => window.clearTimeout(t);
   }, [query]);
 
@@ -73,7 +84,6 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
           <Link to="/home" className={styles.headerHomeLink} aria-label="Home">
             <AiOutlineHome className={styles.headerIcon} />
           </Link>
-
           <Link to="/create-exercise" className={styles.headerHomeLink} aria-label="Add exercise">
             <Plus className={styles.headerIcon} />
           </Link>
@@ -93,18 +103,12 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
               }}
             />
           </div>
-          
-          { /* Popup dropdown */ }
           {open && (
             <div className={styles.searchPopup} role="listbox">
               {loading ? (
-                <div className={`${styles.searchPopupRow} ${styles.muted}`}>
-                  Searching…
-                </div>
+                <div className={`${styles.searchPopupRow} ${styles.muted}`}>Searching…</div>
               ) : results.length === 0 ? (
-                <div className={`${styles.searchPopupRow} ${styles.muted}`}>
-                  No matches
-                </div>
+                <div className={`${styles.searchPopupRow} ${styles.muted}`}>No matches</div>
               ) : (
                 results.map((ex) => (
                   <Link
@@ -124,19 +128,15 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
         </div>
 
         <div className={styles.headerRightIcons}>
-          <Link
-            to="/exercise-list"
-            className={styles.headerHomeLink}
-            aria-label="Exercise cart"
-          >
-            <ClipboardList className={styles.headerIcon} />
+          <Link to="/exercise-list" className={styles.headerCartLink} aria-label="Exercise cart">
+            <div style={{ position: 'relative', display: 'inline-block' }}>
+              <ClipboardList className={styles.headerIcon} />
+              {cartCount > 0 && (
+                <div className={styles.cartBadge}>{cartCount}</div>
+              )}
+            </div>
           </Link>
-
-          <Link
-            to="/sign-in"
-            className={styles.headerHomeLink}
-            aria-label="Sign in"
-          >
+          <Link to="/sign-in" className={styles.headerHomeLink} aria-label="Sign in">
             <LogIn className={styles.headerIcon} />
           </Link>
         </div>
