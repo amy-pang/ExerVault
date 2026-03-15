@@ -4,6 +4,7 @@ import { supabase } from "../supabaseClient";
 import styles from "./SignInPage.module.css";
 
 export default function SignUpPage() {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -22,12 +23,28 @@ export default function SignUpPage() {
 
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { username } },
+    });
+
+    if (signUpError) {
+      setError(signUpError.message);
+      setLoading(false);
+      return;
+    }
+
+    // Update the username in public.users (created by the DB trigger)
+    const { error: updateError } = await supabase
+      .from("users")
+      .update({ username })
+      .eq("id", data.user!.id);
 
     setLoading(false);
 
-    if (error) {
-      setError(error.message);
+    if (updateError) {
+      setError(updateError.message);
     } else {
       navigate("/sign-in");
     }
@@ -39,6 +56,20 @@ export default function SignUpPage() {
         <h1 className={styles.title}>Create account</h1>
 
         <form className={styles.form} onSubmit={handleSubmit}>
+          <label className={styles.label} htmlFor="username">
+            Username
+          </label>
+          <input
+            id="username"
+            className={styles.input}
+            type="text"
+            placeholder="your_username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            autoComplete="username"
+          />
+
           <label className={styles.label} htmlFor="email">
             Email
           </label>
