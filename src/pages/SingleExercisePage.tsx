@@ -104,6 +104,7 @@ export default function ExercisePage() {
       setDeleting(false);
     }
   };
+  
 
   // Fetch exercise from database
   useEffect(() => {
