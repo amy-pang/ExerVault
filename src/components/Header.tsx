@@ -73,17 +73,8 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
           <Link to="/home" className={styles.headerHomeLink} aria-label="Home">
             <AiOutlineHome className={styles.headerIcon} />
           </Link>
-        <div className={styles.leftIcons}>
-          <Link to="/home" className={styles.headerHomeLink} aria-label="Home">
-            <AiOutlineHome className={styles.headerIcon} />
-          </Link>
 
           <Link to="/create-exercise" className={styles.headerHomeLink} aria-label="Add exercise">
-            <Plus className={styles.headerIcon} />
-          </Link>
-        </div>
-
-          <Link to="/upload" className={styles.headerHomeLink} aria-label="Add exercise">
             <Plus className={styles.headerIcon} />
           </Link>
         </div>
