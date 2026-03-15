@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './HomePage.module.css';
 import { Plus } from 'lucide-react';
 import { supabase } from '../supabaseClient';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Cart } from '../types/exercise';
 import type { Exercise } from '../types/exercise';
 import Filter from "../components/Filter";
@@ -16,6 +16,7 @@ export default function HomePage({ cart }: ExercisePageProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const filteredExercises =
    selectedCategories.length === 0
@@ -29,6 +30,8 @@ export default function HomePage({ cart }: ExercisePageProps) {
       const { data, error } = await supabase
         .from('exercises')
         .select('id, name, category, description, image_path');
+        .from('exercises')
+        .select('id, name, category, description, image_path');
 
       if (error) {
         console.error("Error fetching exercises:", error);
@@ -39,10 +42,15 @@ export default function HomePage({ cart }: ExercisePageProps) {
     }
 
     fetchExercises();
-  }, []);
+  }, [location.key]);
 
   const handleAddToCart = (exerciseData: Exercise) => {
     const exerciseToAdd: Exercise = {
+      id: exerciseData.id,
+      name: exerciseData.name,
+      category: exerciseData.category || '',
+      description: exerciseData.description,
+      image_path: exerciseData.image_path,
       id: exerciseData.id,
       name: exerciseData.name,
       category: exerciseData.category || '',
@@ -54,6 +62,8 @@ export default function HomePage({ cart }: ExercisePageProps) {
     cart.addToCart(exerciseToAdd);
     console.log('Added to cart:', exerciseToAdd.name);
     console.log('Cart now has:', cart.getExercises().length, 'items');
+    console.log('Added to cart:', exerciseToAdd.name);
+    console.log('Cart now has:', cart.getExercises().length, 'items');
   };
 
   if (loading) {
@@ -63,13 +73,16 @@ export default function HomePage({ cart }: ExercisePageProps) {
   return (
     <div className={styles.homePage}>
       {/* Welcome */}
+      {/* Welcome */}
       <div className={styles.pageHeaderWrapper}>
         <div className={styles.pageHeader}>
           <h1 className={styles.welcomeText}>Welcome Back!</h1>
           <Filter selectedCategories={selectedCategories} onChange={setSelectedCategories} />
+          <Filter selectedCategories={selectedCategories} onChange={setSelectedCategories} />
         </div>
       </div>
 
+      {/* Exercise Cards */}
       {/* Exercise Cards */}
       <div className={styles.exerciseGrid}>
         {filteredExercises.map((exercise) => (
@@ -77,6 +90,7 @@ export default function HomePage({ cart }: ExercisePageProps) {
             key={exercise.id}
             className={styles.exerciseCard}
             onClick={() => navigate(`/exercise/${exercise.id}`)}
+            style={{ cursor: 'pointer' }}
             style={{ cursor: 'pointer' }}
           >
             <div className={styles.cardImage}>
@@ -99,7 +113,10 @@ export default function HomePage({ cart }: ExercisePageProps) {
               className={styles.addButton}
               onClick={(e) => {
                 console.log('Button clicked!');
+                console.log('Button clicked!');
                 e.stopPropagation();
+                console.log('Adding exercise:', exercise.name);
+                handleAddToCart(exercise);
                 console.log('Adding exercise:', exercise.name);
                 handleAddToCart(exercise);
               }}
