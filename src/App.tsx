@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import './App.css';
 import ExerciseListPage from './pages/ExerciseListPage';
 import HomePage from './pages/HomePage'
@@ -11,16 +11,17 @@ import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import UploadPage from './pages/UploadPage';
 
-function App() {
+const AUTH_ROUTES = ["/sign-in", "/sign-up"];
+
+function AppContent() {
   const [query, setQuery] = useState("");
   const cart = new Cart();  // PLEASE USE THIS FOR THE SHOPPING CART 🙏
+  const location = useLocation();
+  const showHeader = !AUTH_ROUTES.includes(location.pathname);
 
   return (
-    <BrowserRouter>
-      <Header
-        query={query}
-        onQueryChange={setQuery}
-      />
+    <>
+      {showHeader && <Header query={query} onQueryChange={setQuery} />}
       <Routes>
         <Route path="/" element={<Navigate to="/sign-in" replace />} />
         <Route path="/home" element={<HomePage cart={cart}/>} />
@@ -31,6 +32,14 @@ function App() {
         <Route path="/sign-up" element={<SignUpPage />} />
         <Route path="/create-exercise" element={<UploadPage />} />
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 }
