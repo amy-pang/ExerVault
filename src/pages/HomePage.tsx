@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./HomePage.module.css";
 import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
