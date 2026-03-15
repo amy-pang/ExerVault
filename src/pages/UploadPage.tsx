@@ -103,6 +103,7 @@ export default function UploadPage() {
       setTimeout(() => {
         navigate("/create-exercise");
       }, 1);
+      
     } catch (err: any) {
       setError(err.message || "Something went wrong.");
     } finally {
