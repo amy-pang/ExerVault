@@ -13,26 +13,40 @@ export default function HomePage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const filteredExercises =
-   selectedCategories.length === 0
-     ? exercises
-     : exercises.filter((exercise) =>
-         selectedCategories.includes(exercise.category?.trim().toLowerCase())
-       );
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupExercise, setPopupExercise] = useState<Exercise | null>(null);
+  const [popupDirection, setPopupDirection] = useState<"above" | "below">("above");
+
+  const [frequency, setFrequency] = useState("");
+  const [frequencyType, setFrequencyType] = useState<FrequencyType>("week");
+  const [sets, setSets] = useState("");
+  const [reps, setReps] = useState("");
+  const [repType, setRepType] = useState<RepType>("reps");
+  const [description, setDescription] = useState("");
+  const [comments, setComments] = useState("");
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+
+  const filteredExercises = useMemo(() => {
+    return selectedCategories.length === 0
+      ? exercises
+      : exercises.filter((exercise) =>
+          selectedCategories.includes(exercise.category?.trim().toLowerCase())
+        );
+  }, [exercises, selectedCategories]);
 
   useEffect(() => {
     async function fetchExercises() {
       const { data, error } = await supabase
-        .from('exercises')
-        .select('id, name, category, description, image_path');
+        .from("exercises")
+        .select("id, name, category, description, image_path");
 
       if (error) {
         console.error("Error fetching exercises:", error);
       } else if (data) {
         setExercises(data);
       }
+
       setLoading(false);
     }
 
@@ -115,22 +129,23 @@ export default function HomePage() {
 
   return (
     <div className={styles.homePage}>
-      {/* Welcome */}
       <div className={styles.pageHeaderWrapper}>
         <div className={styles.pageHeader}>
           <h1 className={styles.welcomeText}>Welcome Back!</h1>
-          <Filter selectedCategories={selectedCategories} onChange={setSelectedCategories} />
+          <Filter
+            selectedCategories={selectedCategories}
+            onChange={setSelectedCategories}
+          />
         </div>
       </div>
 
-      {/* Exercise Cards */}
       <div className={styles.exerciseGrid}>
         {filteredExercises.map((exercise) => (
           <div
             key={exercise.id}
             className={styles.exerciseCard}
             onClick={() => navigate(`/exercise/${exercise.id}`)}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           >
             <div className={styles.cardImage}>
               {exercise.image_path ? (
@@ -148,17 +163,155 @@ export default function HomePage() {
               <strong>Category:</strong> {exercise.category}
             </p>
             <p className={styles.description}>{exercise.description}</p>
+
             <button
               className={styles.addButton}
               onClick={(e) => {
-                console.log('Button clicked!');
                 e.stopPropagation();
-                console.log('Adding exercise:', exercise.name);
-                handleAddToCart(exercise);
+
+                if (isPopupOpen && popupExercise?.id === exercise.id) {
+                  closePopup();
+                } else {
+                  openPopup(exercise, e.currentTarget);
+                }
               }}
+              aria-label="Add to list"
             >
               +
             </button>
+            {isPopupOpen && popupExercise?.id === exercise.id && (
+              <>
+                <div className={styles.popupBackdrop} onClick={closePopup} />
+
+                <div
+                  className={`${styles.popupBox} ${
+                    popupDirection === "above"
+                      ? styles.popupAbove
+                      : styles.popupBelow
+                  }`}
+                  onClick={(e) => e.stopPropagation()}
+                  role="dialog"
+                  aria-modal="true"
+                >
+                  <div className={styles.popupHeader}>
+                    <h2 className={styles.popupTitle}>{popupExercise.name}</h2>
+
+                    <button
+                      className={styles.popupClose}
+                      onClick={closePopup}
+                      aria-label="Close"
+                    >
+                      ×
+                    </button>
+                  </div>
+
+                  <div className={styles.popupForm}>
+                    <div className={styles.popupRow}>
+                      <label className={styles.popupLabel}>Frequency</label>
+                      <input
+                        type="number"
+                        min="1"
+                        className={`${styles.popupInput} ${
+                          attemptedSubmit && !isFrequencyValid
+                            ? styles.invalidInput
+                            : ""
+                        }`}
+                        value={frequency}
+                        onChange={(e) => setFrequency(e.target.value)}
+                      />
+                      <select
+                        className={styles.popupSelect}
+                        value={frequencyType}
+                        onChange={(e) =>
+                          setFrequencyType(e.target.value as FrequencyType)
+                        }
+                      >
+                        <option value="day">/Day</option>
+                        <option value="week">/Week</option>
+                        <option value="month">/Month</option>
+                      </select>
+                    </div>
+
+                    <div className={styles.popupRow}>
+                      <label className={styles.popupLabel}>Sets</label>
+                      <input
+                        type="number"
+                        min="1"
+                        className={`${styles.popupInput} ${
+                          attemptedSubmit && !isSetsValid
+                            ? styles.invalidInput
+                            : ""
+                        }`}
+                        value={sets}
+                        onChange={(e) => setSets(e.target.value)}
+                      />
+                    </div>
+
+                    <div className={styles.popupRow}>
+                      <label className={styles.popupLabel}>
+                        {repType === "reps" ? "Reps" : "Seconds"}
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        className={`${styles.popupInput} ${
+                          attemptedSubmit && !isRepsValid
+                            ? styles.invalidInput
+                            : ""
+                        }`}
+                        value={reps}
+                        onChange={(e) => setReps(e.target.value)}
+                      />
+                      <select
+                        className={styles.popupSelect}
+                        value={repType}
+                        onChange={(e) =>
+                          setRepType(e.target.value as RepType)
+                        }
+                      >
+                        <option value="reps">Reps</option>
+                        <option value="seconds">Seconds</option>
+                      </select>
+                    </div>
+
+                    <textarea
+                      className={styles.popupTextarea}
+                      placeholder="Description"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
+
+                    <textarea
+                      className={styles.popupTextarea}
+                      placeholder="Additional comments..."
+                      value={comments}
+                      onChange={(e) => setComments(e.target.value)}
+                    />
+
+                    {attemptedSubmit && !canAdd && (
+                      <div className={styles.popupError}>
+                        Frequency, Sets, and Reps are required.
+                      </div>
+                    )}
+
+                    <div className={styles.popupActions}>
+                      <button
+                        className={styles.popupCancelBtn}
+                        onClick={closePopup}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className={styles.popupAddBtn}
+                        onClick={handleAddToCartFromPopup}
+                      >
+                        Add to list
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         ))}
       </div>
