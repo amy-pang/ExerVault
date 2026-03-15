@@ -4,7 +4,7 @@ import { supabase } from "../supabaseClient";
 import styles from "./SignInPage.module.css";
 
 export default function SignUpPage() {
-  const [username, setUsername] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -23,28 +23,16 @@ export default function SignUpPage() {
 
     setLoading(true);
 
-    const { data, error: signUpError } = await supabase.auth.signUp({
+    const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { username } },
+      options: { data: { display_name: displayName } },
     });
-
-    if (signUpError) {
-      setError(signUpError.message);
-      setLoading(false);
-      return;
-    }
-
-    // Update the username in public.users (created by the DB trigger)
-    const { error: updateError } = await supabase
-      .from("users")
-      .update({ username })
-      .eq("id", data.user!.id);
 
     setLoading(false);
 
-    if (updateError) {
-      setError(updateError.message);
+    if (signUpError) {
+      setError(signUpError.message);
     } else {
       navigate("/sign-in");
     }
@@ -56,18 +44,18 @@ export default function SignUpPage() {
         <h1 className={styles.title}>Create account</h1>
 
         <form className={styles.form} onSubmit={handleSubmit}>
-          <label className={styles.label} htmlFor="username">
-            Username
+          <label className={styles.label} htmlFor="displayName">
+            Display name
           </label>
           <input
-            id="username"
+            id="displayName"
             className={styles.input}
             type="text"
-            placeholder="your_username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Your Name"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
             required
-            autoComplete="username"
+            autoComplete="name"
           />
 
           <label className={styles.label} htmlFor="email">
