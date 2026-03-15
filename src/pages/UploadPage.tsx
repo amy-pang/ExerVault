@@ -100,9 +100,16 @@ export default function UploadPage() {
 
       // Reset form after short delay, then navigate home
       setTimeout(() => {
+          // Reset all fields
+        setName("");
+        setCategory("");
+        setDescription("");
+        setImageFile(null);
+        setImagePreview(null);
+  if (fileInputRef.current) fileInputRef.current.value = "";
         navigate("/create-exercise");
       }, 1);
-      
+
     } catch (err: any) {
       setError(err.message || "Something went wrong.");
     } finally {
