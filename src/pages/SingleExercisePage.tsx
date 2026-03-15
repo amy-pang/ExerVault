@@ -89,6 +89,7 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
     console.log(`${exercise.name} added to list!`);
     console.log(cart.getExercises());
   };
+  
 
   // Fetch exercise from database
   useEffect(() => {
