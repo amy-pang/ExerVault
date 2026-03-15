@@ -5,16 +5,15 @@ import styles from "./UploadPage.module.css";
 
 const CATEGORIES = [
   "Hip",
-  "Knee",
-  "Shoulder",
-  "Ankle",
+  "Pelvic Floor",
+  "Vision",
+  "Core",
   "Back",
-  "Neck",
+  "Nerve Glide",
   "Core",
   "Wrist/Hand",
-  "Elbow",
-  "Full Body",
-  "Balance",
+  "Theraputty",
+  "Vestibular",
   "Other",
 ];
 
@@ -113,7 +112,7 @@ export default function UploadPage() {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.pageTitle}>Add New Exercise</h1>
+      <h1 className={styles.pageTitle}>Create New Exercise</h1>
 
       <div className={styles.content}>
         {/* Left: Image Upload */}
