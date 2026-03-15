@@ -15,11 +15,9 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, transform 0.15s;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
 }
 
 .print-button:hover {
-  background: #1d4ed8;
   transform: translateY(-1px);
 }
 
