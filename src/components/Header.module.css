@@ -24,6 +24,22 @@
   box-sizing: border-box;
 }
 
+/* ---------- Left icon group ---------- */
+.headerLeftIcons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* ---------- Right icon group ---------- */
+.headerRightIcons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
 /* ---------- Home/cart links (click target + hover) ---------- */
 .headerHomeLink {
   display: inline-flex;
@@ -196,6 +212,10 @@
   transform: none;
 }
 
+.leftIcons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 /* ---------- Responsive tweaks ---------- */
 @media (max-width: 720px) {
   .headerContainer {
@@ -211,4 +231,30 @@
     width: 38px;
     height: 38px;
   }
+
+}
+}
+
+.cartBadge {
+  position: absolute;
+  top: -10px;
+  right: -12px;
+  background-color: #FFD700;
+  color: #000;
+  border-radius: 50%;
+  min-width: 11px;
+  height: 11px;
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.headerCartLink {
+  position: relative;
+  display: inline-block;
 }

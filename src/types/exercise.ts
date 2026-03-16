@@ -55,6 +55,7 @@ export class Cart {
 
   private saveCart(): void {
     localStorage.setItem('exerciseCart', JSON.stringify(this.exercises));
+    window.dispatchEvent(new Event('cartUpdated'));
   }
 
   private loadCart(): Exercise[] {
