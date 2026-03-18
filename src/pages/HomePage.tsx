@@ -2,18 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import styles from "./HomePage.module.css";
 import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
-import { Cart } from "../types/exercise";
 import type { Exercise } from "../types/exercise";
 import Filter from "../components/Filter";
-
-interface ExercisePageProps {
-  cart: Cart;
-}
 
 type FrequencyType = "day" | "week" | "month";
 type RepType = "reps" | "seconds";
 
-export default function HomePage({ cart }: ExercisePageProps) {
+export default function HomePage() {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -95,28 +90,36 @@ export default function HomePage({ cart }: ExercisePageProps) {
   const isRepsValid = Number(reps) > 0;
   const canAdd = isFrequencyValid && isSetsValid && isRepsValid;
 
-  const handleAddToCartFromPopup = () => {
+  const handleAddToCartFromPopup = async () => {
     setAttemptedSubmit(true);
 
     if (!popupExercise) return;
     if (!canAdd) return;
 
-    const exerciseToAdd: Exercise = {
-      id: popupExercise.id,
-      name: popupExercise.name,
-      category: popupExercise.category || "",
-      description: description || popupExercise.description || "",
-      image_path: popupExercise.image_path,
-      frequency,
-      frequencyType,
-      sets,
-      reps,
-      repType,
-      comments,
-      addedAt: Date.now(),
-    };
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
 
-    cart.addToCart(exerciseToAdd);
+    const { error } = await supabase
+      .from('cart_items')
+      .upsert({
+        user_id: user.id,
+        exercise_id: popupExercise.id,
+        name: popupExercise.name,
+        category: popupExercise.category || "",
+        description: description || popupExercise.description || "",
+        image_path: popupExercise.image_path,
+        frequency,
+        frequency_type: frequencyType,
+        sets,
+        reps,
+        rep_type: repType,
+        comments,
+        added_at: Date.now(),
+      }, { onConflict: 'user_id,exercise_id' });
+
+    if (error) { console.error('Error adding to cart:', error); return; }
+
+    window.dispatchEvent(new Event('cartUpdated'));
     closePopup();
   };
 
