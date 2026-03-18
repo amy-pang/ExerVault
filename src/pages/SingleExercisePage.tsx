@@ -1,15 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from '../supabaseClient';
-import { Cart } from '../types/exercise';
-import type { Exercise } from '../types/exercise';
 import styles from "./SingleExercisePage.module.css";
 
-interface ExercisePageProps {
-  cart: Cart;
-}
-
-export default function ExercisePage({ cart }: ExercisePageProps) {
+export default function ExercisePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [exercise, setExercise] = useState<any>(null);
@@ -26,25 +20,34 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
   const [isInCart, setIsInCart] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const handleAddToList = () => {
+  const handleAddToList = async () => {
     if (!exercise) return;
 
-    const exerciseToAdd: Exercise = {
-      id: exercise.id,
-      name: exercise.name,
-      category: exercise.category,
-      description: description || exercise.description,
-      image_path: exercise.image_path,
-      frequency,
-      frequencyType: frequencyType as 'week' | 'day' | 'month',
-      sets,
-      reps,
-      repType: repType as 'reps' | 'seconds',
-      comments,
-    };
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
 
-    cart.addToCart(exerciseToAdd);
-    setIsInCart(true);
+    const { error } = await supabase
+      .from('cart_items')
+      .upsert({
+        user_id: user.id,
+        exercise_id: exercise.id,
+        name: exercise.name,
+        category: exercise.category,
+        description: description || exercise.description,
+        image_path: exercise.image_path,
+        frequency,
+        frequency_type: frequencyType,
+        sets,
+        reps,
+        rep_type: repType,
+        comments,
+        added_at: Date.now(),
+      }, { onConflict: 'user_id,exercise_id' });
+
+    if (!error) {
+      window.dispatchEvent(new Event('cartUpdated'));
+      setIsInCart(true);
+    }
   };
 
   const handleDelete = async () => {
@@ -86,9 +89,11 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
 
       console.log("Delete successful, navigating home");
 
-      // Step 3: remove from cart if the method exists
-      if (typeof cart.removeFromCart === "function") {
-        cart.removeFromCart(exercise.id);
+      // Step 3: remove from cart if present
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from('cart_items').delete().eq('user_id', user.id).eq('exercise_id', exercise.id);
+        window.dispatchEvent(new Event('cartUpdated'));
       }
 
       navigate("/home");
@@ -119,9 +124,16 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
       setExercise(data);
       setDescription(data.description || "");
 
-      const cartExercises = cart.getExercises();
-      const existsInCart = cartExercises.some(ex => ex.id === id);
-      setIsInCart(existsInCart);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: cartItem } = await supabase
+          .from('cart_items')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('exercise_id', id)
+          .maybeSingle();
+        setIsInCart(!!cartItem);
+      }
 
       if (data.image_path) {
         const { data: urlData } = supabase.storage
@@ -141,24 +153,6 @@ export default function ExercisePage({ cart }: ExercisePageProps) {
     fetchExercise();
   }, [id]);
 
-  // Load saved values on mount
-  useEffect(() => {
-    setFrequency(localStorage.getItem("frequency") || "");
-    setFrequencyType(localStorage.getItem("frequencyType") || "week");
-    setSets(localStorage.getItem("sets") || "");
-    setReps(localStorage.getItem("reps") || "");
-    setRepType(localStorage.getItem("repType") || "reps");
-    setComments(localStorage.getItem("comments") || "");
-  }, []);
-
-  // Persist values
-  useEffect(() => localStorage.setItem("frequency", frequency), [frequency]);
-  useEffect(() => localStorage.setItem("frequencyType", frequencyType), [frequencyType]);
-  useEffect(() => localStorage.setItem("sets", sets), [sets]);
-  useEffect(() => localStorage.setItem("reps", reps), [reps]);
-  useEffect(() => localStorage.setItem("repType", repType), [repType]);
-  useEffect(() => localStorage.setItem("description", description), [description]);
-  useEffect(() => localStorage.setItem("comments", comments), [comments]);
 
   return (
     <div className={styles.page}>

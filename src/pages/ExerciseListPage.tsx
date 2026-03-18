@@ -3,18 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import ExerciseListCard from "../components/ExerciseListCard";
 import Sidebar from "../components/Sidebar";
-import { Cart, type Exercise } from "../types/exercise";
+import type { Exercise } from "../types/exercise";
 import styles from "./ExerciseListPage.module.css";
 
 interface CartExerciseWithImage extends Exercise {
   image_url?: string;
 }
 
-interface ExerciseListPageProps {
-  cart: Cart;
-}
-
-export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
+export default function ExerciseListPage() {
   const [cartExercises, setCartExercises] = useState<CartExerciseWithImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery] = useState("");
@@ -22,61 +18,56 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
 
   useEffect(() => {
     fetchCartExercises();
-
-    const interval = setInterval(() => {
-      fetchCartExercises();
-    }, 1000);
-
-    return () => clearInterval(interval);
+    window.addEventListener('cartUpdated', fetchCartExercises);
+    return () => window.removeEventListener('cartUpdated', fetchCartExercises);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchCartExercises = async () => {
     try {
-      const exercises = cart.getExercises();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { setCartExercises([]); setLoading(false); return; }
 
-      if (exercises.length === 0) {
-        setCartExercises([]);
-        setLoading(false);
-        return;
-      }
-
-      const exerciseIds = exercises.map((ex) => ex.id);
       const { data, error } = await supabase
-        .from("exercises")
-        .select("*")
-        .in("id", exerciseIds);
+        .from('cart_items')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('added_at', { ascending: true });
 
       if (error) throw error;
+      if (!data || data.length === 0) { setCartExercises([]); setLoading(false); return; }
 
-      if (!data) {
-        setCartExercises(exercises);
-        setLoading(false);
-        return;
-      }
+      const exerciseIds = data.map((item) => item.exercise_id);
+      const { data: exerciseData } = await supabase
+        .from('exercises')
+        .select('id, image_path')
+        .in('id', exerciseIds);
 
-      const exercisesWithUrls: CartExerciseWithImage[] = exercises.map((cartEx) => {
-        const dbExercise = data.find((ex) => ex.id === cartEx.id);
+      const exercisesWithUrls: CartExerciseWithImage[] = data.map((item) => {
+        const dbExercise = exerciseData?.find((ex) => ex.id === item.exercise_id);
 
         let imageUrl = "/images/default.png";
         if (dbExercise?.image_path) {
           const { data: urlData } = supabase.storage
             .from("exercise-images")
             .getPublicUrl(dbExercise.image_path);
-
           if (urlData?.publicUrl) imageUrl = urlData.publicUrl;
         }
 
         return {
-          ...cartEx,
+          id: item.exercise_id,
+          name: item.name,
+          category: item.category || '',
+          description: item.description || '',
+          image_path: item.image_path,
           image_url: imageUrl,
-          frequency: cartEx.frequency,
-          frequencyType: cartEx.frequencyType,
-          sets: cartEx.sets,
-          reps: cartEx.reps,
-          repType: cartEx.repType,
-          comments: cartEx.comments,
-          addedAt: cartEx.addedAt,
+          frequency: item.frequency,
+          frequencyType: item.frequency_type as 'week' | 'day' | 'month',
+          sets: item.sets,
+          reps: item.reps,
+          repType: item.rep_type as 'reps' | 'seconds',
+          comments: item.comments,
+          addedAt: item.added_at,
         };
       });
 
@@ -88,16 +79,21 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
     }
   };
 
-  const handleRemoveFromCart = (id: string) => {
-    cart.removeFromCart(id);
+  const handleRemoveFromCart = async (id: string) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    await supabase.from('cart_items').delete().eq('user_id', user.id).eq('exercise_id', id);
+    window.dispatchEvent(new Event('cartUpdated'));
     fetchCartExercises();
   };
 
-  const handleClearCart = () => {
-    if (window.confirm("Are you sure you want to clear all exercises from the cart?")) {
-      cart.clearCart();
-      setCartExercises([]);
-    }
+  const handleClearCart = async () => {
+    if (!window.confirm("Are you sure you want to clear all exercises from the cart?")) return;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    await supabase.from('cart_items').delete().eq('user_id', user.id);
+    window.dispatchEvent(new Event('cartUpdated'));
+    setCartExercises([]);
   };
 
 
@@ -132,7 +128,7 @@ export default function ExerciseListPage({ cart }: ExerciseListPageProps) {
           >
             <h1 className={styles.pageTitle}>Exercise List</h1>
 
-            {cart.getCartCount() > 0 && (
+            {cartExercises.length > 0 && (
               <button
                 onClick={handleClearCart}
                 style={{
