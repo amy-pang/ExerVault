@@ -13,53 +13,51 @@ export type Exercise = {
   addedAt?: number;
 };
 
-// Shopping Cart Class
-export class Cart {
-  private exercises: Exercise[];
+// // Shopping Cart Class (replaced by Supabase cart_items table)
+// export class Cart {
+//   private exercises: Exercise[];
 
-  constructor() {
-    this.exercises = this.loadCart();
-  }
+//   constructor() {
+//     this.exercises = this.loadCart();
+//   }
 
-  addToCart(newExercise: Exercise): void {
-    const existingIndex = this.exercises.findIndex(ex => ex.id === newExercise.id);
-    
-    if (existingIndex !== -1) {
-      // Update existing exercise
-      this.exercises[existingIndex] = { ...newExercise, addedAt: this.exercises[existingIndex].addedAt };
-    } else {
-      // Add new exercise
-      this.exercises = [...this.exercises, { ...newExercise, addedAt: Date.now() }];
-    }
-    
-    this.saveCart();
-  }
+//   addToCart(newExercise: Exercise): void {
+//     const existingIndex = this.exercises.findIndex(ex => ex.id === newExercise.id);
+//
+//     if (existingIndex !== -1) {
+//       this.exercises[existingIndex] = { ...newExercise, addedAt: this.exercises[existingIndex].addedAt };
+//     } else {
+//       this.exercises = [...this.exercises, { ...newExercise, addedAt: Date.now() }];
+//     }
+//
+//     this.saveCart();
+//   }
 
-  removeFromCart(id: string): void {
-    this.exercises = this.exercises.filter(ex => ex.id !== id);
-    this.saveCart();
-  }
+//   removeFromCart(id: string): void {
+//     this.exercises = this.exercises.filter(ex => ex.id !== id);
+//     this.saveCart();
+//   }
 
-  clearCart(): void {
-    this.exercises = [];
-    this.saveCart();
-  }
+//   clearCart(): void {
+//     this.exercises = [];
+//     this.saveCart();
+//   }
 
-  getCartCount(): number {
-    return this.exercises.length;
-  }
+//   getCartCount(): number {
+//     return this.exercises.length;
+//   }
 
-  getExercises(): Exercise[] {
-    return this.exercises;
-  }
+//   getExercises(): Exercise[] {
+//     return this.exercises;
+//   }
 
-  private saveCart(): void {
-    localStorage.setItem('exerciseCart', JSON.stringify(this.exercises));
-    window.dispatchEvent(new Event('cartUpdated'));
-  }
+//   private saveCart(): void {
+//     localStorage.setItem('exerciseCart', JSON.stringify(this.exercises));
+//     window.dispatchEvent(new Event('cartUpdated'));
+//   }
 
-  private loadCart(): Exercise[] {
-    const saved = localStorage.getItem('exerciseCart');
-    return saved ? JSON.parse(saved) : [];
-  }
-};
+//   private loadCart(): Exercise[] {
+//     const saved = localStorage.getItem('exerciseCart');
+//     return saved ? JSON.parse(saved) : [];
+//   }
+// };

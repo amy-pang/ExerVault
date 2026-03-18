@@ -4,7 +4,6 @@ import { ClipboardList, LogIn, Plus } from "lucide-react";
 import { supabase } from "../supabaseClient";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
-import { Cart } from "../types/exercise";
 
 type HeaderProps = {
   query: string;
@@ -27,17 +26,18 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const updateCartCount = () => {
-      const cart = new Cart();
-      setCartCount(cart.getCartCount());
+    const updateCartCount = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { setCartCount(0); return; }
+      const { count } = await supabase
+        .from('cart_items')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+      setCartCount(count ?? 0);
     };
     updateCartCount();
-    window.addEventListener('storage', updateCartCount);
     window.addEventListener('cartUpdated', updateCartCount);
-    return () => {
-      window.removeEventListener('storage', updateCartCount);
-      window.removeEventListener('cartUpdated', updateCartCount);
-    };
+    return () => window.removeEventListener('cartUpdated', updateCartCount);
   }, []);
 
   useEffect(() => {
