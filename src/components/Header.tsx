@@ -4,7 +4,6 @@ import { ShoppingCart, Plus } from "lucide-react";
 import { supabase } from "../supabaseClient";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
-import { Cart } from "../types/exercise";
 
 type HeaderProps = {
   query: string;
