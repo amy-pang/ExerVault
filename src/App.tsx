@@ -21,10 +21,10 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<Navigate to="/sign-in" replace />} />
-        <Route path="/home" element={<HomePage cart={cart}/>} />
-        <Route path="/exercise-list" element={<ExerciseListPage cart={cart}/>} />  {/* exercises added to print */}
-        <Route path="/exercise/:id" element={<ExercisePage cart={cart} />} />
-        <Route path="/print" element={<PrintPage cart={cart} />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/exercise-list" element={<ExerciseListPage />} />
+        <Route path="/exercise/:id" element={<ExercisePage />} />
+        <Route path="/print" element={<PrintPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
         <Route path="/create-exercise" element={<UploadPage />} />
