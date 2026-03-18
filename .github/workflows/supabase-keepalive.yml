@@ -11,10 +11,8 @@ jobs:
     steps:
       - name: Ping Supabase
         run: |
-          echo "URL is set: ${{ secrets.VITE_SUPABASE_URL != '' }}"
-          echo "KEY is set: ${{ secrets.VITE_SUPABASE_ANON_KEY != '' }}"
-          curl -sv \
-            -H "apikey: ${{ secrets.VITE_SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.VITE_SUPABASE_ANON_KEY }}" \
-            "${{ secrets.VITE_SUPABASE_URL }}/rest/v1/exercises?select=id&limit=1"
+          curl -s \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/exercises?select=id&limit=1"
           echo "Ping complete"
