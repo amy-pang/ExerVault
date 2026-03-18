@@ -20,7 +20,6 @@ export default function HomePage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Apply category + favorites filters
   const filteredExercises = exercises
     .filter((exercise) =>
       selectedCategories.length === 0 ||
@@ -102,11 +101,8 @@ export default function HomePage() {
     // Optimistic update
     setFavorites((prev) => {
       const next = new Set(prev);
-      if (isFavorited) {
-        next.delete(exerciseId);
-      } else {
-        next.add(exerciseId);
-      }
+      if (isFavorited) next.delete(exerciseId);
+      else next.add(exerciseId);
       return next;
     });
 
@@ -145,20 +141,16 @@ export default function HomePage() {
     <div className={styles.homePage}>
       <div className={styles.pageHeaderWrapper}>
         <div className={styles.pageHeader}>
-          <h1 className={styles.welcomeText}>
-            {showOnlyFavorites ? '★ Starred Exercises' : 'Welcome Back!'}
-          </h1>
+          <h1 className={styles.welcomeText}>Welcome Back!</h1>
           <Filter
             selectedCategories={selectedCategories}
             onChange={setSelectedCategories}
-            favorites={favorites}
             showOnlyFavorites={showOnlyFavorites}
             onToggleFavorites={() => setShowOnlyFavorites((prev) => !prev)}
           />
         </div>
       </div>
 
-      {/* Empty state for starred view */}
       {showOnlyFavorites && filteredExercises.length === 0 && (
         <div style={{
           textAlign: 'center',
@@ -167,7 +159,7 @@ export default function HomePage() {
           fontSize: '16px',
         }}>
           <div style={{ fontSize: '48px', marginBottom: '12px' }}>☆</div>
-          <p style={{ fontWeight: 600, color: '#374151', marginBottom: '8px' }}>No starred exercises yet</p>
+          <p style={{ fontWeight: 600, color: '#374151', marginBottom: '8px' }}>No favorited exercises yet</p>
           <p>Click the ☆ on any exercise card to save it here.</p>
         </div>
       )}
@@ -180,7 +172,6 @@ export default function HomePage() {
             onClick={() => navigate(`/exercise/${exercise.id}`)}
             style={{ cursor: 'pointer' }}
           >
-            {/* Star button */}
             <button
               className={`${styles.starButton} ${favorites.has(exercise.id) ? styles.starActive : ''}`}
               onClick={(e) => handleToggleFavorite(e, exercise.id)}

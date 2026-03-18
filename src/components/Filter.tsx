@@ -4,12 +4,11 @@ import { supabase } from '../supabaseClient'
 interface FilterProps {
   selectedCategories: string[];
   onChange: (categories: string[]) => void;
-  favorites: Set<string>;
   showOnlyFavorites: boolean;
   onToggleFavorites: () => void;
 }
 
-export default function Filter({ selectedCategories, onChange, favorites, showOnlyFavorites, onToggleFavorites }: FilterProps) {
+export default function Filter({ selectedCategories, onChange, showOnlyFavorites, onToggleFavorites }: FilterProps) {
   const [categories, setCategories] = useState<string[] | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -50,35 +49,9 @@ export default function Filter({ selectedCategories, onChange, favorites, showOn
   }
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-
-      {/* Starred toggle button */}
-      <button
-        onClick={onToggleFavorites}
-        title={showOnlyFavorites ? 'Show all exercises' : 'Show starred only'}
-        style={{
-          padding: '0.5rem 0.85rem',
-          backgroundColor: showOnlyFavorites ? '#f59e0b' : '#000',
-          color: showOnlyFavorites ? '#000' : '#fff',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: 'pointer',
-          fontSize: '16px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-          fontWeight: 600,
-          transition: 'background 0.2s, color 0.2s',
-        }}
-      >
-        {showOnlyFavorites ? '★' : '☆'}
-        <span style={{ fontSize: '14px' }}>
-          {showOnlyFavorites ? `Starred (${favorites.size})` : 'Starred'}
-        </span>
-      </button>
-
-      {/* Category filter */}
+    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
       <div style={{ position: 'relative', display: 'inline-block' }}>
+
         <button
           onClick={handleToggleCategories}
           style={{
@@ -108,10 +81,21 @@ export default function Filter({ selectedCategories, onChange, favorites, showOn
               color: '#000',
               boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
               borderRadius: '8px',
-              zIndex: 10,
+              zIndex: 100,
               minWidth: '240px'
             }}
           >
+            {/* Starred option */}
+            <label style={{ display: 'flex', alignItems: 'center', width: '100%', borderBottom: '1px solid #e5e7eb', paddingBottom: '0.75rem', marginBottom: '0' }}>
+              <input
+                type="checkbox"
+                checked={showOnlyFavorites}
+                onChange={onToggleFavorites}
+              />
+              <span style={{ marginLeft: '0.3rem' }}>Favorites</span>
+            </label>
+
+            {/* Category checkboxes */}
             {categories.map((category) => (
               <label
                 key={category}

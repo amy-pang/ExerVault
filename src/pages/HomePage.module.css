@@ -202,7 +202,7 @@
   line-height: 1;
   color: rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  z-index: 10;
+  z-index: 1;
 
   transition: transform 0.15s ease, color 0.15s ease;
 }
