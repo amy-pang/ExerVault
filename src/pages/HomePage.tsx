@@ -2,13 +2,8 @@ import React, { useEffect, useState } from 'react';
 import styles from './HomePage.module.css';
 import { supabase } from '../supabaseClient';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Cart } from '../types/exercise';
 import type { Exercise } from '../types/exercise';
 import Filter from "../components/Filter";
-
-interface ExercisePageProps {
-  cart: Cart;
-}
 
 export default function HomePage() {
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -17,6 +12,7 @@ export default function HomePage() {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [addedIds, setAddedIds] = useState<Set<string>>(new Set());
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -50,51 +46,67 @@ export default function HomePage() {
       }
       setLoading(false);
     }
-
     fetchExercises();
   }, [location.key]);
 
-  // Fetch favorites for current user
+  // Fetch favorites
   useEffect(() => {
     if (!userId) return;
-
     async function fetchFavorites() {
       const { data, error } = await supabase
         .from('favorites')
         .select('exercise_id')
         .eq('user_id', userId);
 
-      if (error) {
-        console.error("Error fetching favorites:", error);
-        return;
-      }
-
-      const ids = new Set(data?.map((f: any) => f.exercise_id) ?? []);
-      setFavorites(ids);
+      if (error) { console.error("Error fetching favorites:", error); return; }
+      setFavorites(new Set(data?.map((f: any) => f.exercise_id) ?? []));
     }
-
     fetchFavorites();
   }, [userId]);
 
-  const handleAddToCart = (exerciseData: Exercise) => {
-    const exerciseToAdd: Exercise = {
-      id: exerciseData.id,
-      name: exerciseData.name,
-      category: exerciseData.category || '',
-      description: exerciseData.description,
-      image_path: exerciseData.image_path,
-      addedAt: Date.now(),
-    };
-    cart.addToCart(exerciseToAdd);
-  };
+  // Fetch which exercises are already in cart
+  useEffect(() => {
+    if (!userId) return;
+    async function fetchCartIds() {
+      const { data, error } = await supabase
+        .from('cart_items')
+        .select('exercise_id')
+        .eq('user_id', userId);
 
-  const handleToggleFavorite = async (e: React.MouseEvent, exerciseId: string) => {
-    e.stopPropagation();
+      if (error) { console.error("Error fetching cart:", error); return; }
+      setAddedIds(new Set(data?.map((item: any) => item.exercise_id) ?? []));
+    }
+    fetchCartIds();
+  }, [userId]);
 
+  const handleAddToCart = async (exerciseData: Exercise) => {
     if (!userId) {
       navigate('/sign-in');
       return;
     }
+
+    const { error } = await supabase
+      .from('cart_items')
+      .upsert({
+        user_id: userId,
+        exercise_id: exerciseData.id,
+        name: exerciseData.name,
+        category: exerciseData.category || '',
+        description: exerciseData.description,
+        image_path: exerciseData.image_path,
+        added_at: Date.now(),
+      }, { onConflict: 'user_id,exercise_id' });
+
+    if (error) {
+      console.error("Error saving to cart:", error);
+    } else {
+      setAddedIds((prev) => new Set([...prev, exerciseData.id]));
+    }
+  };
+
+  const handleToggleFavorite = async (e: React.MouseEvent, exerciseId: string) => {
+    e.stopPropagation();
+    if (!userId) { navigate('/sign-in'); return; }
 
     const isFavorited = favorites.has(exerciseId);
 
@@ -124,18 +136,12 @@ export default function HomePage() {
 
       if (error) {
         console.error("Error adding favorite:", error);
-        setFavorites((prev) => {
-          const next = new Set(prev);
-          next.delete(exerciseId);
-          return next;
-        });
+        setFavorites((prev) => { const next = new Set(prev); next.delete(exerciseId); return next; });
       }
     }
   };
 
-  if (loading) {
-    return <div className={styles.homePage}>Loading...</div>;
-  }
+  if (loading) return <div className={styles.homePage}>Loading...</div>;
 
   return (
     <div className={styles.homePage}>
@@ -152,12 +158,7 @@ export default function HomePage() {
       </div>
 
       {showOnlyFavorites && filteredExercises.length === 0 && (
-        <div style={{
-          textAlign: 'center',
-          padding: '80px 20px',
-          color: '#6b7280',
-          fontSize: '16px',
-        }}>
+        <div style={{ textAlign: 'center', padding: '80px 20px', color: '#6b7280', fontSize: '16px' }}>
           <div style={{ fontSize: '48px', marginBottom: '12px' }}>☆</div>
           <p style={{ fontWeight: 600, color: '#374151', marginBottom: '8px' }}>No favorited exercises yet</p>
           <p>Click the ☆ on any exercise card to save it here.</p>
@@ -172,6 +173,7 @@ export default function HomePage() {
             onClick={() => navigate(`/exercise/${exercise.id}`)}
             style={{ cursor: 'pointer' }}
           >
+            {/* Star button */}
             <button
               className={`${styles.starButton} ${favorites.has(exercise.id) ? styles.starActive : ''}`}
               onClick={(e) => handleToggleFavorite(e, exercise.id)}
@@ -193,19 +195,16 @@ export default function HomePage() {
             </div>
 
             <h3>{exercise.name}</h3>
-            <p className={styles.equipment}>
-              <strong>Category:</strong> {exercise.category}
-            </p>
+            <p className={styles.equipment}><strong>Category:</strong> {exercise.category}</p>
             <p className={styles.description}>{exercise.description}</p>
 
+            {/* Add button */}
             <button
               className={styles.addButton}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleAddToCart(exercise);
-              }}
+              onClick={(e) => { e.stopPropagation(); handleAddToCart(exercise); }}
+              title={addedIds.has(exercise.id) ? "Already in list" : "Add to list"}
             >
-              +
+              {addedIds.has(exercise.id) ? '✓' : '+'}
             </button>
           </div>
         ))}
