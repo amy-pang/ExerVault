@@ -1,17 +1,16 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import "./PrintPage.css";
-
 import { supabase } from "../supabaseClient";
 import type { Exercise } from "../types/exercise";
 
 type PrintExercise = Exercise & { image_url: string };
 
-export default function PrintPage({ cart }: PrintPageProps) {
+export default function PrintPage() {
   const [fontSize, setFontSize] = useState<number>(16);
   const [color, setColor] = useState<string>("#1a4b7a");
   const [blackAndWhite, setBlackAndWhite] = useState<boolean>(false);
 
-  const [exercises, setExercises] = useState<PrintExercise[]>([]);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
 
   const printAreaStyle = useMemo(() => {
