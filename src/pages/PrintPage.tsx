@@ -1,26 +1,14 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import "./PrintPage.css";
-
 import { supabase } from "../supabaseClient";
-import { Cart, type Exercise } from "../types/exercise";
+import { type Exercise } from "../types/exercise";
 
-interface PrintPageProps {
-  cart: Cart;
-}
-
-type PrintExercise = Exercise & {
-  image_url?: string;
-  frequencyType?: string;
-  repType?: string;
-  addedAt?: string | number;
-};
-
-export default function PrintPage({ cart }: PrintPageProps) {
+export default function PrintPage() {
   const [fontSize, setFontSize] = useState<number>(16);
   const [color, setColor] = useState<string>("#1a4b7a");
   const [blackAndWhite, setBlackAndWhite] = useState<boolean>(false);
 
-  const [exercises, setExercises] = useState<PrintExercise[]>([]);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
 
   const printAreaStyle = useMemo(() => {
@@ -60,7 +48,7 @@ export default function PrintPage({ cart }: PrintPageProps) {
         return;
       }
 
-      const exercisesWithUrls: PrintExercise[] = data.map((item) => {
+      const exercisesWithUrls: Exercise[] = data.map((item) => {
         let imageUrl = "/images/default.png";
 
         if (item.image_path) {
@@ -163,7 +151,7 @@ export default function PrintPage({ cart }: PrintPageProps) {
               <div key={ex.addedAt ?? ex.id} className="exercise-card">
                 <div className="exercise-card-image">
                   <img
-                    src={ex.image_url || "/images/default.png"}
+                    src={ex.image_path || "/images/default.png"}
                     alt={ex.name}
                   />
                 </div>
