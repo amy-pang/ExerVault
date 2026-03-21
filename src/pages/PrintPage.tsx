@@ -1,14 +1,17 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import "./PrintPage.css";
+
 import { supabase } from "../supabaseClient";
-import { type Exercise } from "../types/exercise";
+import type { Exercise } from "../types/exercise";
+
+type PrintExercise = Exercise & { image_url: string };
 
 export default function PrintPage() {
   const [fontSize, setFontSize] = useState<number>(16);
   const [color, setColor] = useState<string>("#1a4b7a");
   const [blackAndWhite, setBlackAndWhite] = useState<boolean>(false);
 
-  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [exercises, setExercises] = useState<PrintExercise[]>([]);
   const [loading, setLoading] = useState(true);
 
   const printAreaStyle = useMemo(() => {
@@ -21,56 +24,54 @@ export default function PrintPage() {
 
   useEffect(() => {
     fetchCartExercises();
-
-    const interval = setInterval(() => {
-      fetchCartExercises();
-    }, 1000);
-
-    return () => clearInterval(interval);
+    window.addEventListener("cartUpdated", fetchCartExercises);
+    return () => window.removeEventListener("cartUpdated", fetchCartExercises);
   }, []);
 
   const fetchCartExercises = async () => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { setExercises([]); setLoading(false); return; }
+
       const { data, error } = await supabase
         .from("cart_items")
         .select("*")
+        .eq("user_id", user.id)
         .order("added_at", { ascending: true });
-      
-
-      console.log("cart_items data:", data);
-      console.log("cart_items error:", error);
 
       if (error) throw error;
+      if (!data || data.length === 0) { setExercises([]); setLoading(false); return; }
 
-      if (!data || data.length === 0) {
-        setExercises([]);
-        setLoading(false);
-        return;
-      }
+      const exerciseIds = data.map((item) => item.exercise_id);
+      const { data: exerciseData } = await supabase
+        .from("exercises")
+        .select("id, image_path")
+        .in("id", exerciseIds);
 
-      const exercisesWithUrls: Exercise[] = data.map((item) => {
-        let imageUrl = "/images/default.png";
+      const exercisesWithUrls: PrintExercise[] = data.map((item) => {
+        const dbExercise = exerciseData?.find((ex) => ex.id === item.exercise_id);
 
-        if (item.image_path) {
+        let image_url = "/images/default.png";
+        const imagePath = dbExercise?.image_path ?? item.image_path;
+        if (imagePath) {
           const { data: urlData } = supabase.storage
             .from("exercise-images")
-            .getPublicUrl(item.image_path);
-
-          if (urlData?.publicUrl) imageUrl = urlData.publicUrl;
+            .getPublicUrl(imagePath);
+          if (urlData?.publicUrl) image_url = urlData.publicUrl;
         }
 
         return {
-          id: item.exercise_id ?? item.id,
+          id: item.exercise_id,
           name: item.name,
-          description: item.description,
-          category: item.category,
+          category: item.category || "",
+          description: item.description || "",
           image_path: item.image_path,
-          image_url: imageUrl,
+          image_url,
           frequency: item.frequency,
-          frequencyType: item.frequency_type,
+          frequencyType: item.frequency_type as "week" | "day" | "month",
           sets: item.sets,
           reps: item.reps,
-          repType: item.rep_type,
+          repType: item.rep_type as "reps" | "seconds",
           comments: item.comments,
           addedAt: item.added_at,
         };
@@ -150,10 +151,7 @@ export default function PrintPage() {
             {exercises.map((ex) => (
               <div key={ex.addedAt ?? ex.id} className="exercise-card">
                 <div className="exercise-card-image">
-                  <img
-                    src={ex.image_path || "/images/default.png"}
-                    alt={ex.name}
-                  />
+                  <img src={ex.image_url} alt={ex.name} />
                 </div>
 
                 <div className="exercise-card-content">
