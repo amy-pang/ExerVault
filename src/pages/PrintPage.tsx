@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import "./PrintPage.css";
+
 import { supabase } from "../supabaseClient";
 import type { Exercise } from "../types/exercise";
 
@@ -10,7 +11,7 @@ export default function PrintPage() {
   const [color, setColor] = useState<string>("#1a4b7a");
   const [blackAndWhite, setBlackAndWhite] = useState<boolean>(false);
 
-  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [exercises, setExercises] = useState<PrintExercise[]>([]);
   const [loading, setLoading] = useState(true);
 
   const printAreaStyle = useMemo(() => {
