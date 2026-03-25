@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineHome } from "react-icons/ai";
-import { ClipboardList, LogIn, Plus } from "lucide-react";
+import { ClipboardList, LogIn, Plus, Archive } from "lucide-react";
 import { supabase } from "../supabaseClient";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
@@ -128,6 +128,9 @@ export default function Header({ query, onQueryChange }: HeaderProps) {
         </div>
 
         <div className={styles.headerRightIcons}>
+          <Link to="/saved-lists" className={styles.headerHomeLink} aria-label="Saved lists">
+            <Archive className={styles.headerIcon} />
+          </Link>
           <Link to="/exercise-list" className={styles.headerCartLink} aria-label="Exercise cart">
             <div style={{ position: 'relative', display: 'inline-block' }}>
               <ClipboardList className={styles.headerIcon} />

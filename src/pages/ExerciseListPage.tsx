@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import ExerciseListCard from "../components/ExerciseListCard";
 import Sidebar from "../components/Sidebar";
+import SaveListModal from "../components/SaveListModal";
 import type { Exercise } from "../types/exercise";
 import styles from "./ExerciseListPage.module.css";
 
@@ -14,6 +15,7 @@ export default function ExerciseListPage() {
   const [cartExercises, setCartExercises] = useState<CartExerciseWithImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery] = useState("");
+  const [showSaveModal, setShowSaveModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -96,6 +98,10 @@ export default function ExerciseListPage() {
     setCartExercises([]);
   };
 
+  const handleSaveListSuccess = () => {
+    alert('List saved successfully!');
+  };
+
 
 
   const handleContinueBrowsing = () => {
@@ -124,29 +130,52 @@ export default function ExerciseListPage() {
               justifyContent: "space-between",
               alignItems: "center",
               marginBottom: "24px",
+              gap: "12px",
+              flexWrap: "wrap",
             }}
           >
             <h1 className={styles.pageTitle}>Exercise List</h1>
 
-            {cartExercises.length > 0 && (
-              <button
-                onClick={handleClearCart}
-                style={{
-                  padding: "10px 20px",
-                  background: "#ff4444",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "8px",
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  transition: "background 0.2s",
-                }}
-                onMouseOver={(e) => (e.currentTarget.style.background = "#cc0000")}
-                onMouseOut={(e) => (e.currentTarget.style.background = "#ff4444")}
-              >
-                Clear List
-              </button>
-            )}
+            <div style={{ display: "flex", gap: "12px" }}>
+              {cartExercises.length > 0 && (
+                <button
+                  onClick={() => setShowSaveModal(true)}
+                  style={{
+                    padding: "10px 20px",
+                    background: "#10b981",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    fontWeight: "600",
+                    transition: "background 0.2s",
+                  }}
+                  onMouseOver={(e) => (e.currentTarget.style.background = "#059669")}
+                  onMouseOut={(e) => (e.currentTarget.style.background = "#10b981")}
+                >
+                  Save List
+                </button>
+              )}
+              {cartExercises.length > 0 && (
+                <button
+                  onClick={handleClearCart}
+                  style={{
+                    padding: "10px 20px",
+                    background: "#ff4444",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    fontWeight: "600",
+                    transition: "background 0.2s",
+                  }}
+                  onMouseOver={(e) => (e.currentTarget.style.background = "#cc0000")}
+                  onMouseOut={(e) => (e.currentTarget.style.background = "#ff4444")}
+                >
+                  Clear List
+                </button>
+              )}
+            </div>
           </div>
 
           {filteredExercises.length === 0 ? (
@@ -240,6 +269,13 @@ export default function ExerciseListPage() {
 
         <Sidebar exercises={filteredExercises} />
       </div>
+
+      <SaveListModal
+        isOpen={showSaveModal}
+        exercises={cartExercises}
+        onClose={() => setShowSaveModal(false)}
+        onSaveSuccess={handleSaveListSuccess}
+      />
     </div>
   );
 }
