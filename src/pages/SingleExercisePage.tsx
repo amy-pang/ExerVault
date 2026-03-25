@@ -18,7 +18,7 @@ export default function ExercisePage() {
   const [description, setDescription] = useState("");
   const [comments, setComments] = useState("");
   const [isInCart, setIsInCart] = useState(false);
-  const [deleting, setDeleting] = useState(false); // used by commented-out delete button
+  //const [deleting, setDeleting] = useState(false); // used by commented-out delete button
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
   const isFrequencyValid = Number(frequency) > 0;
@@ -57,7 +57,7 @@ export default function ExercisePage() {
     }
   };
 
-  const handleDelete = async () => {
+  /*const handleDelete = async () => {
     if (!exercise) {
       console.error("DELETE failed: exercise is null");
       return;
@@ -111,6 +111,7 @@ export default function ExercisePage() {
       setDeleting(false);
     }
   };
+  */
 
   // Fetch exercise from database
   useEffect(() => {
