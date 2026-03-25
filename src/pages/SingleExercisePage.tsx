@@ -18,10 +18,17 @@ export default function ExercisePage() {
   const [description, setDescription] = useState("");
   const [comments, setComments] = useState("");
   const [isInCart, setIsInCart] = useState(false);
-  const [deleting, setDeleting] = useState(false);
+  const [deleting, setDeleting] = useState(false); // used by commented-out delete button
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+
+  const isFrequencyValid = Number(frequency) > 0;
+  const isSetsValid = Number(sets) > 0;
+  const isRepsValid = Number(reps) > 0;
+  const canAdd = isFrequencyValid && isSetsValid && isRepsValid;
 
   const handleAddToList = async () => {
-    if (!exercise) return;
+    setAttemptedSubmit(true);
+    if (!exercise || !canAdd) return;
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
@@ -164,13 +171,13 @@ export default function ExercisePage() {
           <span className={styles.category}>{exercise?.category || "Category"}</span>
         </h1>
 
-        <button
+        {/* <button
           className={styles.deleteBtn}
           onClick={handleDelete}
           disabled={deleting || loading}
         >
           {deleting ? "DELETING..." : "DELETE"}
-        </button>
+        </button> */}
       </div>
 
       <div className={styles.content}>
@@ -204,7 +211,7 @@ export default function ExercisePage() {
             <label className={styles.label}>Frequency</label>
             <input
               type="number"
-              className={styles.inputBox}
+              className={`${styles.inputBox} ${attemptedSubmit && !isFrequencyValid ? styles.inputError : ''}`}
               value={frequency}
               onChange={(e) => setFrequency(e.target.value)}
             />
@@ -223,7 +230,7 @@ export default function ExercisePage() {
             <label className={styles.label}>Sets</label>
             <input
               type="number"
-              className={styles.inputBox}
+              className={`${styles.inputBox} ${attemptedSubmit && !isSetsValid ? styles.inputError : ''}`}
               value={sets}
               onChange={(e) => setSets(e.target.value)}
             />
@@ -234,7 +241,7 @@ export default function ExercisePage() {
             <label className={styles.label}>{repType === "reps" ? "Reps" : "Seconds"}</label>
             <input
               type="number"
-              className={styles.inputBox}
+              className={`${styles.inputBox} ${attemptedSubmit && !isRepsValid ? styles.inputError : ''}`}
               value={reps}
               onChange={(e) => setReps(e.target.value)}
             />
@@ -263,6 +270,12 @@ export default function ExercisePage() {
             value={comments}
             onChange={(e) => setComments(e.target.value)}
           />
+
+          {attemptedSubmit && !canAdd && (
+            <div className={styles.errorMsg}>
+              Please fill in Frequency, Sets, and {repType === "reps" ? "Reps" : "Seconds"} before adding.
+            </div>
+          )}
 
           <button className={styles.addBtn} onClick={handleAddToList}>
             {isInCart ? "Update in list" : "Add to list"}
