@@ -1,12 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./HomePage.module.css";
 import { supabase } from "../supabaseClient";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import type { Exercise } from "../types/exercise";
 import Filter from "../components/Filter";
-
-type FrequencyType = "day" | "week" | "month";
-type RepType = "reps" | "seconds";
 
 export default function HomePage() {
   const [exercises, setExercises] = useState<Exercise[]>([]);
