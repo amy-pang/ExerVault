@@ -99,7 +99,7 @@ export default function ExerciseListPage() {
 
 
   const handleContinueBrowsing = () => {
-    navigate("/");
+    navigate("/home");
     window.scrollTo(0, 0);
   };
 
