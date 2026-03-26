@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { supabase } from '../supabaseClient';
 import styles from "./SingleExercisePage.module.css";
 
 export default function ExercisePage() {
   const { id } = useParams();
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const [exercise, setExercise] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [imageUrl, setImageUrl] = useState("");
