@@ -211,6 +211,9 @@ export default function UploadPage() {
           >
             {uploading ? "Uploading..." : "Add Exercise"}
           </button>
+          <button>
+            cla
+          </button>
         </div>
       </div>
     </div>
