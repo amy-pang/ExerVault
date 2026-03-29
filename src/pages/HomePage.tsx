@@ -47,22 +47,38 @@ export default function HomePage() {
     });
   }, []);
 
-  // Fetch exercises
+  // Fetch Global Exercises
   useEffect(() => {
     async function fetchExercises() {
-      const { data, error } = await supabase
-        .from('exercises')
-        .select('id, name, category, description, image_path');
 
-      if (error) {
-        console.error("Error fetching exercises:", error);
-      } else if (data) {
-        setExercises(data);
+      const {data: globalData, error:globalError} = await supabase
+      .from ("exercises")
+      .select("id, name, category, description, image_path");
+      
+      if (globalError){
+        console.error("Error fetching global exercises:", globalError)
       }
-      setLoading(false);
-    }
-    fetchExercises();
-  }, [location.key]);
+      
+  // Fetch Personal Exercises
+      const {data:personalData, error:personalError} = await supabase
+      .from("user_exercises")
+      .select("id, name, category, description, image_path");
+
+      if (personalError){
+        console.error("Error fetching personal exercises", personalError)
+      }
+
+    //Tag each exercise with either Personal or Global Tag
+    const globalExercises = (globalData || []).map((ex) => ({ ...ex, source: "global" }));
+    const personalExercises = (personalData || []).map((ex) => ({ ...ex, source: "personal" }));
+        setExercises([...globalExercises, ...personalExercises]);
+    setLoading(false);
+  }
+
+  fetchExercises();
+}, []);
+
+
 
   // Fetch favorites
   useEffect(() => {
