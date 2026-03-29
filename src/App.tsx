@@ -9,8 +9,9 @@ import PrintPage from './pages/PrintPage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import UploadPage from './pages/UploadPage';
+import AuthCallbackPage from './pages/AuthCallbackPage';
 
-const AUTH_ROUTES = ["/sign-in", "/sign-up"];
+const AUTH_ROUTES = ["/sign-in", "/sign-up", "/auth/callback"];
 
 function AppContent() {
   const [query, setQuery] = useState("");
@@ -29,6 +30,7 @@ function AppContent() {
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
         <Route path="/create-exercise" element={<UploadPage />} />
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
       </Routes>
     </>
   );
