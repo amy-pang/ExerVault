@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./HomePage.module.css";
 import { supabase } from "../supabaseClient";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -18,6 +18,18 @@ export default function HomePage() {
   const [addedIds, setAddedIds] = useState<Set<string>>(new Set());
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupExercise, setPopupExercise] = useState<Exercise | null>(null);
+  const [popupDirection, setPopupDirection] = useState<"above" | "below">("above");
+
+  const [frequency, setFrequency] = useState("");
+  const [frequencyType, setFrequencyType] = useState<FrequencyType>("week");
+  const [sets, setSets] = useState("");
+  const [reps, setReps] = useState("");
+  const [repType, setRepType] = useState<RepType>("reps");
+  const [comments, setComments] = useState("");
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
   const filteredExercises = exercises
     .filter((exercise) =>
@@ -82,28 +94,70 @@ export default function HomePage() {
     fetchCartIds();
   }, [userId]);
 
-  const handleAddToCart = async (exerciseData: Exercise) => {
-    if (!userId) {
-      navigate('/sign-in');
-      return;
-    }
+  const openPopup = (exerciseData: Exercise, button: HTMLButtonElement) => {
+    const rect = button.getBoundingClientRect();
+    const estimatedPopupHeight = 360;
+    const gap = 10;
+    const spaceAbove = rect.top;
+    const spaceBelow = window.innerHeight - rect.bottom;
+
+    setPopupDirection(
+      spaceAbove >= estimatedPopupHeight + gap || spaceAbove > spaceBelow
+        ? "above"
+        : "below"
+    );
+
+    setPopupExercise(exerciseData);
+    setIsPopupOpen(true);
+    setAttemptedSubmit(false);
+    setFrequency("");
+    setFrequencyType("week");
+    setSets("");
+    setReps("");
+    setRepType("reps");
+    setComments("");
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+    setPopupExercise(null);
+    setAttemptedSubmit(false);
+  };
+
+  const isFrequencyValid = Number(frequency) > 0;
+  const isSetsValid = Number(sets) > 0;
+  const isRepsValid = Number(reps) > 0;
+  const canAdd = isFrequencyValid && isSetsValid && isRepsValid;
+
+  const handleAddToCartFromPopup = async () => {
+    setAttemptedSubmit(true);
+    if (!popupExercise || !canAdd) return;
+    if (!userId) { navigate('/sign-in'); return; }
 
     const { error } = await supabase
       .from('cart_items')
       .upsert({
         user_id: userId,
-        exercise_id: exerciseData.id,
-        name: exerciseData.name,
-        category: exerciseData.category || '',
-        description: exerciseData.description,
-        image_path: exerciseData.image_path,
+        exercise_id: popupExercise.id,
+        name: popupExercise.name,
+        category: popupExercise.category || '',
+        description: popupExercise.description,
+        image_path: popupExercise.image_path,
+        frequency,
+        frequency_type: frequencyType,
+        sets,
+        reps,
+        rep_type: repType,
+        comments,
         added_at: Date.now(),
       }, { onConflict: 'user_id,exercise_id' });
 
     if (error) {
       console.error("Error saving to cart:", error);
     } else {
-      setAddedIds((prev) => new Set([...prev, exerciseData.id]));
+      setAddedIds((prev) => new Set([...prev, popupExercise.id]));
+      window.dispatchEvent(new Event('cartUpdated'));
+      closePopup();
     }
   };
 
@@ -113,7 +167,6 @@ export default function HomePage() {
 
     const isFavorited = favorites.has(exerciseId);
 
-    // Optimistic update
     setFavorites((prev) => {
       const next = new Set(prev);
       if (isFavorited) next.delete(exerciseId);
@@ -168,6 +221,8 @@ export default function HomePage() {
         </div>
       )}
 
+      {isPopupOpen && <div className={styles.popupBackdrop} onClick={closePopup} />}
+
       <div className={styles.exerciseGrid}>
         {filteredExercises.map((exercise) => (
           <div
@@ -203,12 +258,105 @@ export default function HomePage() {
 
             {/* Add button */}
             <button
-              className={styles.addButton}
-              onClick={(e) => { e.stopPropagation(); handleAddToCart(exercise); }}
+              className={`${styles.addButton} ${addedIds.has(exercise.id) ? styles.addButtonAdded : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isPopupOpen && popupExercise?.id === exercise.id) {
+                  closePopup();
+                } else {
+                  openPopup(exercise, e.currentTarget);
+                }
+              }}
               title={addedIds.has(exercise.id) ? "Already in list" : "Add to list"}
+              aria-label="Add to list"
             >
               {addedIds.has(exercise.id) ? '✓' : '+'}
             </button>
+
+            {/* Popup */}
+            {isPopupOpen && popupExercise?.id === exercise.id && (
+              <div
+                className={`${styles.popupBox} ${popupDirection === "above" ? styles.popupAbove : styles.popupBelow}`}
+                onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+              >
+                <div className={styles.popupHeader}>
+                  <h2 className={styles.popupTitle}>{popupExercise.name}</h2>
+                  <button className={styles.popupClose} onClick={closePopup} aria-label="Close">×</button>
+                </div>
+
+                <div className={styles.popupForm}>
+                  <div className={styles.popupRow}>
+                    <label className={styles.popupLabel}>Frequency</label>
+                    <input
+                      type="number"
+                      min="1"
+                      className={`${styles.popupInput} ${attemptedSubmit && !isFrequencyValid ? styles.invalidInput : ''}`}
+                      value={frequency}
+                      onChange={(e) => setFrequency(e.target.value)}
+                    />
+                    <select
+                      className={styles.popupSelect}
+                      value={frequencyType}
+                      onChange={(e) => setFrequencyType(e.target.value as FrequencyType)}
+                    >
+                      <option value="day">/Day</option>
+                      <option value="week">/Week</option>
+                      <option value="month">/Month</option>
+                    </select>
+                  </div>
+
+                  <div className={styles.popupRow}>
+                    <label className={styles.popupLabel}>Sets</label>
+                    <input
+                      type="number"
+                      min="1"
+                      className={`${styles.popupInput} ${attemptedSubmit && !isSetsValid ? styles.invalidInput : ''}`}
+                      value={sets}
+                      onChange={(e) => setSets(e.target.value)}
+                    />
+                  </div>
+
+                  <div className={styles.popupRow}>
+                    <label className={styles.popupLabel}>{repType === "reps" ? "Reps" : "Seconds"}</label>
+                    <input
+                      type="number"
+                      min="1"
+                      className={`${styles.popupInput} ${attemptedSubmit && !isRepsValid ? styles.invalidInput : ''}`}
+                      value={reps}
+                      onChange={(e) => setReps(e.target.value)}
+                    />
+                    <select
+                      className={styles.popupSelect}
+                      value={repType}
+                      onChange={(e) => setRepType(e.target.value as RepType)}
+                    >
+                      <option value="reps">Reps</option>
+                      <option value="seconds">Seconds</option>
+                    </select>
+                  </div>
+
+                  <textarea
+                    className={styles.popupTextarea}
+                    placeholder="Additional comments..."
+                    value={comments}
+                    onChange={(e) => setComments(e.target.value)}
+                  />
+
+                  {attemptedSubmit && !canAdd && (
+                    <div className={styles.popupError}>
+                      Please fill in all required fields (Frequency, Sets, {repType === "reps" ? "Reps" : "Seconds"}).
+                    </div>
+                  )}
+
+                  <div className={styles.popupActions}>
+                    <button className={styles.popupCancelBtn} onClick={closePopup}>Cancel</button>
+                    <button className={styles.popupAddBtn} onClick={handleAddToCartFromPopup}>Add to list</button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>

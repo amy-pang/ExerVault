@@ -228,8 +228,8 @@ export default function ExerciseListPage() {
                       position: "absolute",
                       top: "16px",
                       right: "16px",
-                      background: "#ff4444",
-                      color: "white",
+                      background: "#fee2e2",
+                      color: "#b91c1c",
                       border: "none",
                       borderRadius: "50%",
                       width: "36px",
@@ -241,15 +241,15 @@ export default function ExerciseListPage() {
                       alignItems: "center",
                       justifyContent: "center",
                       transition: "all 0.2s",
-                      boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
                       zIndex: 10,
                     }}
                     onMouseOver={(e) => {
-                      e.currentTarget.style.background = "#cc0000";
+                      e.currentTarget.style.background = "#fecaca";
                       e.currentTarget.style.transform = "scale(1.1)";
                     }}
                     onMouseOut={(e) => {
-                      e.currentTarget.style.background = "#ff4444";
+                      e.currentTarget.style.background = "#fee2e2";
                       e.currentTarget.style.transform = "scale(1)";
                     }}
                   >
