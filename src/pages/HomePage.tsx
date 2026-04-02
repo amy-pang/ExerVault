@@ -47,36 +47,30 @@ export default function HomePage() {
     });
   }, []);
 
-  // Fetch Global Exercises
+  // Fetch Exercises (global + current user's personal only)
   useEffect(() => {
     async function fetchExercises() {
+      const { data: { user } } = await supabase.auth.getUser();
+      const currentUserId = user?.id ?? null;
 
-      const {data: globalData, error:globalError} = await supabase
-      .from ("exercises")
-      .select("id, name, category, description, image_path");
-      
-      if (globalError){
-        console.error("Error fetching global exercises:", globalError)
-      }
-      
-  // Fetch Personal Exercises
-      const {data:personalData, error:personalError} = await supabase
-      .from("user_exercises")
-      .select("id, name, category, description, image_path");
+      const query = supabase
+        .from("exercises")
+        .select("id, name, category, description, image_path, creator");
 
-      if (personalError){
-        console.error("Error fetching personal exercises", personalError)
-      }
+      const { data } = currentUserId
+        ? await query.or(`visibility.is.null,visibility.eq.${currentUserId}`)
+        : await query.is("visibility", null);
 
-    //Tag each exercise with either Personal or Global Tag
-    const globalExercises = (globalData || []).map((ex) => ({ ...ex, source: "global" }));
-    const personalExercises = (personalData || []).map((ex) => ({ ...ex, source: "personal" }));
-        setExercises([...globalExercises, ...personalExercises]);
-    setLoading(false);
-  }
+      const tagged = (data || []).map((ex) => ({
+        ...ex,
+        source: ex.creator ? "personal" : "global",
+      }));
+      setExercises(tagged);
+      setLoading(false);
+    }
 
-  fetchExercises();
-}, []);
+    fetchExercises();
+  }, []);
 
 
 

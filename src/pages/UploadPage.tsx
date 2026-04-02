@@ -81,34 +81,27 @@ const handleSubmit = async () => {
         imagePath = filePath;
       }
 
-      // Insert into the correct table
+      // Resolve creator: personal exercises get the current user's ID, global exercises get null
+      let creator: string | null = null;
       if (saveTarget === "personal") {
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) throw new Error("You must be logged in to create an exercise!");
-
-        const { error: insertError } = await supabase
-          .from("user_exercises")
-          .insert([{
-            user_id: user.id,
-            name: name.trim(),
-            category,
-            description: description.trim() || null,
-            image_path: imagePath,
-          }]);
-
-        if (insertError) throw new Error(`Failed to save exercise: ${insertError.message}`);
-      } else {
-        const { error: insertError } = await supabase
-          .from("exercises")
-          .insert([{
-            name: name.trim(),
-            category,
-            description: description.trim() || null,
-            image_path: imagePath,
-          }]);
-
-        if (insertError) throw new Error(`Failed to save exercise: ${insertError.message}`);
+        if (!user) throw new Error("You must be logged in to create a personal exercise!");
+        creator = user.id;
       }
+      const visibility = saveTarget === "personal" ? creator : null;
+
+      const { error: insertError } = await supabase
+        .from("exercises")
+        .insert([{
+          creator,
+          name: name.trim(),
+          category,
+          description: description.trim() || null,
+          image_path: imagePath,
+          visibility
+        }]);
+
+      if (insertError) throw new Error(`Failed to save exercise: ${insertError.message}`);
 
       setSuccess(true);
 
