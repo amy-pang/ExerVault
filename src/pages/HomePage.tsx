@@ -70,7 +70,7 @@ export default function HomePage() {
     }
 
     fetchExercises();
-  }, []);
+  }, [location.key]);
 
 
 
