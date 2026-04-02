@@ -6,7 +6,7 @@ import type { Exercise } from "../types/exercise";
 
 type PrintExercise = Exercise & { image_url: string };
 
-export default function PrintPage({ cart }: PrintPageProps) {
+export default function PrintPage() {
   const [fontSize, setFontSize] = useState<number>(16);
   const [color, setColor] = useState<string>("#1a4b7a");
   const [blackAndWhite, setBlackAndWhite] = useState<boolean>(false);
