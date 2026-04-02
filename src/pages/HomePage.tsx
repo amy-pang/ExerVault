@@ -47,22 +47,32 @@ export default function HomePage() {
     });
   }, []);
 
-  // Fetch exercises
+  // Fetch Exercises (global + current user's personal only)
   useEffect(() => {
     async function fetchExercises() {
-      const { data, error } = await supabase
-        .from('exercises')
-        .select('id, name, category, description, image_path');
+      const { data: { user } } = await supabase.auth.getUser();
+      const currentUserId = user?.id ?? null;
 
-      if (error) {
-        console.error("Error fetching exercises:", error);
-      } else if (data) {
-        setExercises(data);
-      }
+      const query = supabase
+        .from("exercises")
+        .select("id, name, category, description, image_path, creator");
+
+      const { data } = currentUserId
+        ? await query.or(`visibility.is.null,visibility.eq.${currentUserId}`)
+        : await query.is("visibility", null);
+
+      const tagged = (data || []).map((ex) => ({
+        ...ex,
+        source: ex.creator ? "personal" : "global",
+      }));
+      setExercises(tagged);
       setLoading(false);
     }
+
     fetchExercises();
   }, [location.key]);
+
+
 
   // Fetch favorites
   useEffect(() => {

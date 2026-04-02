@@ -27,6 +27,7 @@ export default function UploadPage() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [saveTarget, setSaveTarget] = useState<'global' | "personal">("global");
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -46,7 +47,7 @@ export default function UploadPage() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handleSubmit = async () => {
+const handleSubmit = async () => {
     setError(null);
 
     if (!name.trim()) {
@@ -63,7 +64,7 @@ export default function UploadPage() {
     try {
       let imagePath: string | null = null;
 
-      // Upload image to Supabase Storage if provided
+      // Upload image (applies to both personal and global)
       if (imageFile) {
         const fileExt = imageFile.name.split(".").pop();
         const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.${fileExt}`;
@@ -80,33 +81,37 @@ export default function UploadPage() {
         imagePath = filePath;
       }
 
-      // Insert exercise row into Supabase
+      // Resolve creator: personal exercises get the current user's ID, global exercises get null
+      let creator: string | null = null;
+      if (saveTarget === "personal") {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error("You must be logged in to create a personal exercise!");
+        creator = user.id;
+      }
+      const visibility = saveTarget === "personal" ? creator : null;
+
       const { error: insertError } = await supabase
         .from("exercises")
-        .insert([
-          {
-            name: name.trim(),
-            category,
-            description: description.trim() || null,
-            image_path: imagePath,
-          },
-        ]);
+        .insert([{
+          creator,
+          name: name.trim(),
+          category,
+          description: description.trim() || null,
+          image_path: imagePath,
+          visibility
+        }]);
 
-      if (insertError) {
-        throw new Error(`Failed to save exercise: ${insertError.message}`);
-      }
+      if (insertError) throw new Error(`Failed to save exercise: ${insertError.message}`);
 
       setSuccess(true);
 
-      // Reset form after short delay, then navigate home
       setTimeout(() => {
-          // Reset all fields
         setName("");
         setCategory("");
         setDescription("");
         setImageFile(null);
         setImagePreview(null);
-  if (fileInputRef.current) fileInputRef.current.value = "";
+        if (fileInputRef.current) fileInputRef.current.value = "";
         navigate("/create-exercise");
       }, 1);
 
@@ -117,6 +122,7 @@ export default function UploadPage() {
     }
   };
 
+  //TSX part
   return (
     <div className={styles.page}>
       <h1 className={styles.pageTitle}>Create New Exercise</h1>
@@ -211,6 +217,17 @@ export default function UploadPage() {
           >
             {uploading ? "Uploading..." : "Add Exercise"}
           </button>
+          <div className={styles.inputRow}>
+          <label className={styles.label}>Save To</label>
+          <select
+            className={styles.dropdown}
+            value={saveTarget}
+            onChange={(e) => setSaveTarget(e.target.value as "global" | "personal")}
+          >
+            <option value="global">Global (all users)</option>
+            <option value="personal">My Exercises (personal)</option>
+          </select>
+          </div>
         </div>
       </div>
     </div>
