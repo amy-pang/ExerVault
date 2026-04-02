@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import './App.css';
 import ExerciseListPage from './pages/ExerciseListPage';
+import SavedListsPage from './pages/SavedListsPage';
 import HomePage from './pages/HomePage'
 import Header from './components/Header';
 import ExercisePage from './pages/SingleExercisePage';
@@ -25,6 +26,7 @@ function AppContent() {
         <Route path="/" element={<Navigate to="/sign-in" replace />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/exercise-list" element={<ExerciseListPage />} />
+        <Route path="/saved-lists" element={<SavedListsPage />} />
         <Route path="/exercise/:id" element={<ExercisePage />} />
         <Route path="/print" element={<PrintPage />} />
         <Route path="/sign-in" element={<SignInPage />} />
