@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import styles from "./SignInPage.module.css";
@@ -9,6 +9,12 @@ export default function SignInPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) navigate("/home");
+    });
+  }, []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -57,7 +63,6 @@ export default function SignInPage() {
           />
 
           <label className={styles.label} htmlFor="password">
-            Password
           </label>
           <input
             id="password"
