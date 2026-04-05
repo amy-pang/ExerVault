@@ -12,7 +12,7 @@ import SignUpPage from './pages/SignUpPage';
 import UploadPage from './pages/UploadPage';
 import AuthCallbackPage from './pages/AuthCallbackPage';
 
-const AUTH_ROUTES = ["/sign-in", "/sign-up", "/auth/callback"];
+const AUTH_ROUTES = ["/sign-in", "/sign-up"];
 
 function AppContent() {
   const [query, setQuery] = useState("");
