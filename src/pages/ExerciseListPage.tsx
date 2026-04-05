@@ -43,7 +43,8 @@ export default function ExerciseListPage() {
       const { data: exerciseData } = await supabase
         .from('exercises')
         .select('id, image_path')
-        .in('id', exerciseIds);
+        .in('id', exerciseIds)
+        .or(`visibility.is.null,visibility.eq.${user.id}`);
 
       const exercisesWithUrls: CartExerciseWithImage[] = data.map((item) => {
         const dbExercise = exerciseData?.find((ex) => ex.id === item.exercise_id);
@@ -188,7 +189,7 @@ export default function ExerciseListPage() {
                 border: "2px dashed #d1d5db",
               }}
             >
-              <div style={{ fontSize: "48px", marginBottom: "16px", opacity: 0.3 }}>🛒</div>
+              <div style={{ fontSize: "48px", marginBottom: "16px", opacity: 0.3 }}></div>
               <p style={{ fontSize: "1.3em", color: "#333", marginBottom: "12px", fontWeight: "600" }}>
                 Your list is empty
               </p>
